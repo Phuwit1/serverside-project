@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Customer(models.Model):
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
 class Customer_Detail(models.Model):
@@ -13,7 +13,7 @@ class Customer_Detail(models.Model):
     email = models.EmailField()
 
 class Shopkeeper(models.Model):
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
 class Shop(models.Model):
@@ -61,7 +61,7 @@ class Menu(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='products/', blank=True, null=True) #not sure
+    image = models.FileField(upload_to='products/', blank=True, null=True) #not sure
 
 
 class OrderItem(models.Model):
