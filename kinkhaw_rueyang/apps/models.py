@@ -33,7 +33,7 @@ class Order(models.Model):
         Order = "Order"
         Cooking = "Cooking"
         Completed = "Completed"
-        Cancelled = "Cancelledd"
+        Cancelled = "Cancelled"
     
     customer = models.ForeignKey(
         "apps.Customer",
