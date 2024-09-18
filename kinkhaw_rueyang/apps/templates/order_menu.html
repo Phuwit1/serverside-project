@@ -6,13 +6,40 @@
     <title>Menu</title>
 </head>
 <body>
-    {% if menu %}
-    <h1>{{menu.name}}</h1>
-    <p>{{menu.description}}</p>
-    <label>-</label>
-    <label>0</label>
-    <label>+</label>
-    <button type="submit">add to cart</button>
-    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {% if menu %}
+            <h1>{{menu.name}}</h1>
+            <p>{{menu.description}}</p>
+            <label onclick=decreaseAmount()>-</label>
+            <label id='amount'>1</label>
+            <input type="hidden" id="amount_input" name="amount" value="1">
+            <label onclick=increaseAmount()>+</label>
+            <br>
+            <button type="submit">add to cart</button>
+        {% endif %}
+    </form>
 </body>
 </html>
+
+<script>
+    function decreaseAmount() {
+        let amountLabel = document.getElementById('amount');
+        let amountInput = document.getElementById('amount_input');
+        let currentAmount = parseInt(amountLabel.innerHTML);
+        if (currentAmount > 0) {
+            currentAmount -= 1;
+            amountLabel.innerHTML = currentAmount;
+            amountInput.value = currentAmount;
+        }
+    }
+
+    function increaseAmount() {
+        let amountLabel = document.getElementById('amount');
+        let amountInput = document.getElementById('amount_input');
+        let currentAmount = parseInt(amountLabel.innerHTML);
+        currentAmount += 1;
+        amountLabel.innerHTML = currentAmount;
+        amountInput.value = currentAmount;
+    }
+</script>

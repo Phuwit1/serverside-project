@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 from .models import *
 from .forms import *
@@ -48,6 +48,10 @@ class SelectMenuOrderView(View):
         except ObjectDoesNotExist:
             return HttpResponse("<h1 style='font-size:100px'>ไม่พบเมนูนี้ในร้านนี้😒🥲</h1>")
         return render(request, "order_menu.html", {
-            "menu": query
+            "menu": query,
         })
-        
+    
+    def post(self, request, menu_id, shop_id):
+        amount = int(request.POST.get('amount', 1))
+        print(amount)
+        return redirect('selectmenu', shop_id)
