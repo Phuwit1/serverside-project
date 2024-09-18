@@ -1,9 +1,12 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractBaseUser
 # Create your models here.
-class Customer(models.Model):
+class Customer(AbstractBaseUser):
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
+    
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
 
 class Customer_Detail(models.Model):
     customer = models.OneToOneField("apps.Customer", on_delete=models.PROTECT)
