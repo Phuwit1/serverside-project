@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+</head>
+<body>
+    {% if shop %}
+        <div style="background-color: pink;">
+            <h1>{{shop.name}}</h1>
+            <p>{{shop.description}}</p>
+        </div>
+    {% endif %}
+    {% if menu %}
+        <div>
+            {% for i in menu %}
+                {% url "selectmenuorder" shop.id i.id as selmeor %}
+                <div style="background-color: yellow;">
+                    <a href="{{selmeor}}">
+                        <div>
+                            <p>{{i.name}}</p>
+                            <p>{{i.description}}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h1>ร้านนี้ยังไม่มีเมนูอะไรเลย🥲</h1>
+    {% endif %}
+    <divn >
+    </div>
+</body>
+</html>
+

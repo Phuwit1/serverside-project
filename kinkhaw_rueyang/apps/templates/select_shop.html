@@ -8,7 +8,8 @@
 <body>
     {% if shop %}
         {% for i in shop %}
-            <a href="" style="color: black; text-decoration: none;"> {%comment%} เพิ่ม style ไว้เฉยๆ แยกไว้ข้างนอกทีหลัง {%endcomment%} 
+            {% url "selectmenu" i.id as selm %}
+            <a href="{{selm}}" style="color: black; text-decoration: none;"> {%comment%} เพิ่ม style ไว้เฉยๆ แยกไว้ข้างนอกทีหลัง {%endcomment%} 
                 <div style="background-color: yellow;">
                     <h1>{{i.name}}</h1>
                     <p>{{i.description}}</p>
@@ -17,7 +18,7 @@
             </a>
         {% endfor %}
     {% else %}
-        <h1>ไม่มีร้านไหนเปิดเลยแย่จัง</h1>
+        <h1>🐋 ไม่มีร้านไหนเปิดเลยแย่จัง 🐋</h1>
     {% endif %}
 </body>
 </html>
