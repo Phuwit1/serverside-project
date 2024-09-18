@@ -20,7 +20,9 @@ from .forms import *
 
 class SelectShopView(View):
     def get(self, request):
-        query = Shop.objects.all()
+        queries = Shop.objects.all()
+        for query in queries:
+            query.count_order = query.order_set.exclude(order_status__in=["Completed", "Cancelled"]).count()
         return render(request, "select_shop.html", {
-            "shop": query,
+            "shop": queries,
         })
