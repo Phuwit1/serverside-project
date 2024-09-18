@@ -31,3 +31,7 @@ from django.contrib.auth import authenticate
     #             raise ValidationError("เข้าไม่ได้หรอก อิอิ")
     #     return clean_data
     
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ['name', 'price', 'description', 'image']

@@ -1,9 +1,11 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,get_object_or_404
 from django.views import View
 from .models import *
 from .forms import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.db import transaction
+
 
 # class LoginView(View):
 #     def get(self, request):
@@ -55,3 +57,62 @@ class SelectMenuOrderView(View):
         amount = int(request.POST.get('amount', 1))
         print(amount)
         return redirect('selectmenu', shop_id)
+    
+#ของน้องออม
+class ManageMenuView(View):
+    def get(self, request):
+        menu_items = Menu.objects.all()
+        for item in menu_items:
+            if not item.image:  
+                item.image = 'default_image.jpg'  # รูปเหี้ยไรวะ
+        return render(request, 'manage_menu.html', {'menu_items': menu_items})
+    
+
+
+class MenuCreateView(View):
+    def get(self, request):
+        form = MenuForm()
+        return render(request, 'menu_form.html', {'form': form})
+
+    def post(self, request):
+        form = MenuForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                with transaction.atomic(): 
+                    form.save()
+                return redirect('manage_menu')
+            except Exception as e:
+                return render(request, 'menu_form.html', {'form': form, 'error': str(e)})
+        return render(request, 'menu_form.html', {'form': form})
+
+class MenuEditView(View):
+    def get(self, request, pk):
+        menu_item = get_object_or_404(Menu, pk=pk)
+        form = MenuForm(instance=menu_item)
+        return render(request, 'menu_form.html', {'form': form})
+
+    def post(self, request, pk):
+        menu_item = get_object_or_404(Menu, pk=pk)
+        form = MenuForm(request.POST, request.FILES, instance=menu_item)
+        if form.is_valid():
+            try:
+                with transaction.atomic():  
+                    form.save()
+                return redirect('manage_menu')
+            except Exception as e:
+                return render(request, 'menu_form.html', {'form': form, 'error': str(e)})
+        return render(request, 'menu_form.html', {'form': form})
+
+class MenuDeleteView(View):
+    def get(self, request, pk):
+        menu_item = get_object_or_404(Menu, pk=pk)
+        return render(request, 'menu_confirm_delete.html', {'menu_item': menu_item})
+
+    def post(self, request, pk):
+        try:
+            menu_item = get_object_or_404(Menu, pk=pk)
+            with transaction.atomic():  
+                menu_item.delete()
+            return redirect('manage_menu')
+        except Exception as e:
+            return render(request, 'menu_confirm_delete.html', {'menu_item': menu_item, 'error': str(e)})
