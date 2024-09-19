@@ -84,7 +84,14 @@ class SelectMenuOrderView(View):
                 menus = Menu.objects.get(id=menu_id)
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
         return redirect('selectmenu', customer_id, shop_id)
-    
+
+class CartView(View):
+    def get(self, request, customer_id):
+        query = Cart.objects.get(customer__id=customer_id)
+        return render(request, "cus_cart.html", {
+            'cart': query,
+        })
+
 #ของน้องออม
 class ManageMenuView(View):
     def get(self, request):
