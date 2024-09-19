@@ -98,7 +98,7 @@ class ManageMenuView(View):
         menu_items = Menu.objects.all()
         for item in menu_items:
             if not item.image:  
-                item.image = 'default_image.jpg'  # รูปเหี้ยไรวะ
+                item.image = 'default_image.jpg'  # Notsure
         return render(request, 'manage_menu.html', {'menu_items': menu_items})
     
 
@@ -138,15 +138,12 @@ class MenuEditView(View):
         return render(request, 'menu_form.html', {'form': form})
 
 class MenuDeleteView(View):
-    def get(self, request, pk):
-        menu_item = get_object_or_404(Menu, pk=pk)
-        return render(request, 'menu_confirm_delete.html', {'menu_item': menu_item})
-
     def post(self, request, pk):
+        menu_item = get_object_or_404(Menu, pk=pk)
         try:
-            menu_item = get_object_or_404(Menu, pk=pk)
             with transaction.atomic():  
                 menu_item.delete()
             return redirect('manage_menu')
         except Exception as e:
-            return render(request, 'menu_confirm_delete.html', {'menu_item': menu_item, 'error': str(e)})
+            menu_items = Menu.objects.all()
+            return render(request, 'manage_menu.html', {'menu_items': menu_items, 'error': str(e)})
