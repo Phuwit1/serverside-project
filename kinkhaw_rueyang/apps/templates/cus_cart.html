@@ -7,9 +7,16 @@
 </head>
 <body>
     {% if cart %}
-        {% for i in cart.cartitem_set.all %}
-            <p>{{i.price}}</p>
-        {% endfor %}
+        <form method="post">
+            {% for i in cart.cartitem_set.all %}
+                <p>{{i.menu.name}} x{{i.quantity}}</p>
+                <p>{{i.price}}</p>
+            {% endfor %}
+            <button type="submit">{{cart.sum}}</button>
+        </form>
+    {% endif %}
+    {% if emp == 0 %}
+        <h1>cart ว่างเปล่า</h1>
     {% endif %}
 </body>
 </html>

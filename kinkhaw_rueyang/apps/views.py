@@ -87,10 +87,15 @@ class SelectMenuOrderView(View):
 
 class CartView(View):
     def get(self, request, customer_id):
-        query = Cart.objects.get(customer__id=customer_id)
-        return render(request, "cus_cart.html", {
-            'cart': query,
-        })
+        try:
+            query = Cart.objects.annotate(sum = Sum("cartitem__price")).get(customer__id=customer_id)
+            return render(request, "cus_cart.html", {
+                'cart': query,
+            })
+        except ObjectDoesNotExist:
+            return render(request, "cus_cart.html", {
+                'emp': 0,
+            })
 
 #ของน้องออม
 class ManageMenuView(View):
