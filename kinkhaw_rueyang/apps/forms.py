@@ -35,9 +35,9 @@ from django.contrib.auth import authenticate
 class MenuForm(forms.ModelForm):
     categories = forms.ModelMultipleChoiceField(
         queryset=MenuCategory.objects.all(),
-        widget=forms.CheckboxSelectMultiple,  # สามารถเปลี่ยนเป็น Dropdown หรือ SelectMultiple
-        required=False,  # ทำให้เป็นตัวเลือก ไม่บังคับต้องเลือก
-        label="Categories"  # ป้ายชื่อของฟิลด์นี้
+        widget=forms.CheckboxSelectMultiple, 
+        required=False,
+        label="Categories"
     )
 
     class Meta:
