@@ -13,4 +13,5 @@ urlpatterns = [
     path('managemenu/create/', views.MenuCreateView.as_view(), name='menu_create'),
     path('managemenu/edit/<int:pk>/', views.MenuEditView.as_view(), name='menu_edit'),
     path('managemenu/delete/<int:pk>/', views.MenuDeleteView.as_view(), name='menu_delete'),
+    # path('managemenu/category/<int:category_id>/', views.MenuCategoryView.as_view(), name='menu_category')
 ]

@@ -1,3 +1,5 @@
+
+# models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 # Create your models here.
@@ -65,6 +67,13 @@ class Menu(models.Model):
     image = models.FileField(upload_to='products/', blank=True, null=True) #not sure
 
 
+class MenuCategory(models.Model):
+    menu = models.ManyToManyField("apps.Menu")
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
 class OrderItem(models.Model):
     order = models.ForeignKey(
         "apps.Order",
@@ -81,9 +90,6 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
 
-class MenuCategory(models.Model):
-    menu = models.ManyToManyField("apps.Menu")
-    name = models.CharField(max_length=100)
 
 class Cart(models.Model):
     customer = models.OneToOneField("apps.Customer", on_delete=models.PROTECT)
