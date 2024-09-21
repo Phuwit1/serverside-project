@@ -139,22 +139,6 @@ class MenuCreateView(View):
             return redirect('manage_menu')
         categories = MenuCategory.objects.all()
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
-class MenuCreateView(View):
-    def get(self, request):
-        form = MenuForm()
-        categories = MenuCategory.objects.all()
-        return render(request, 'menu_form.html', {'form': form, 'categories': categories})
-
-    def post(self, request):
-        form = MenuForm(request.POST, request.FILES)
-        if form.is_valid():
-            menu_item = form.save()  
-            category_ids = form.cleaned_data.get('categories') 
-            if category_ids:
-                menu_item.menucategory_set.set(category_ids)  
-            return redirect('manage_menu')
-        categories = MenuCategory.objects.all()  
-        return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
 
 
