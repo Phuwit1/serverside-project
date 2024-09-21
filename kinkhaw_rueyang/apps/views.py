@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import F, Q, Count, Sum
 from django.contrib import messages
+from django.utils import timezone
 
 # class LoginView(View):
 #     def get(self, request):
@@ -96,6 +97,13 @@ class CartView(View):
             return render(request, "cus_cart.html", {
                 'emp': 0,
             })
+    
+    @transaction.atomic
+    def post(self, request, customer_id):
+        cart = Cart.objects.annotate(sum = Sum("cartitem__price")).get(customer__id=customer_id)
+        cus = Customer.objects.get(id=customer_id)
+        order = Order.objects.create(customer=cus, shop=cart.shop, total_price=cart.sum, order_date=timezone.now(), order_status="Order")
+        
 
 #ของน้องออม
 class ManageMenuView(View):
