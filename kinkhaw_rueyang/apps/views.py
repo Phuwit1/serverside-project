@@ -135,7 +135,7 @@ class MenuCreateView(View):
             menu_item = form.save()  
             category_ids = form.cleaned_data.get('categories')           
             if category_ids:
-                menu_item.menu_category.set(category_ids)  
+                menu_item.menucategory_set.set(category_ids)
             return redirect('manage_menu')
         categories = MenuCategory.objects.all()
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
@@ -162,9 +162,9 @@ class MenuEditView(View):
             category_ids = form.cleaned_data.get('categories') 
 
             if category_ids:
-               
                 menu_item.menucategory_set.clear()  
-                menu_item.menucategory_set.add(*category_ids)  
+                menu_item.menucategory_set.add(*category_ids)
+            return redirect('manage_menu')  
         categories = MenuCategory.objects.all()  
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
