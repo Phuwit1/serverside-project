@@ -103,6 +103,8 @@ class CartView(View):
         cart = Cart.objects.annotate(sum = Sum("cartitem__price")).get(customer__id=customer_id)
         cus = Customer.objects.get(id=customer_id)
         order = Order.objects.create(customer=cus, shop=cart.shop, total_price=cart.sum, order_date=timezone.now(), order_status="Order")
+        # order_item = OrderItem.objects.create
+        return redirect('selectshop', customer_id)
         
 
 #ของน้องออม

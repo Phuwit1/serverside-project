@@ -8,6 +8,7 @@
 <body>
     {% if cart %}
         <form method="post">
+            {% csrf_token %}
             {% for i in cart.cartitem_set.all %}
                 <p>{{i.menu.name}} x{{i.quantity}}</p>
                 <p>{{i.price}}</p>
