@@ -1,3 +1,4 @@
+# forms.py
 from django import forms
 from .models import *
 from django.forms import ModelForm
@@ -32,6 +33,13 @@ from django.contrib.auth import authenticate
     #     return clean_data
     
 class MenuForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(
+        queryset=MenuCategory.objects.all(),
+        widget=forms.CheckboxSelectMultiple,  # สามารถเปลี่ยนเป็น Dropdown หรือ SelectMultiple
+        required=False,  # ทำให้เป็นตัวเลือก ไม่บังคับต้องเลือก
+        label="Categories"  # ป้ายชื่อของฟิลด์นี้
+    )
+
     class Meta:
         model = Menu
-        fields = ['name', 'price', 'description', 'image']
+        fields = ['name', 'price', 'description', 'image', 'categories']
