@@ -1,9 +1,29 @@
-<h1>{% if form.instance.pk %}Edit Menu{% else %}Create Menu{% endif %}</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create/Edit Menu</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+</head>
 
-<a href="{% url 'manage_menu' %}">Cancel</a>
+<body>
+    <h1>{% if form.instance.pk %}Edit Menu{% else %}Create Menu{% endif %}</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+
+
+
+
+</body>
+
+</html>
