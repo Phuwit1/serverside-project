@@ -7,13 +7,17 @@
 </head>
 <body>
     {% if cart %}
-        <form method="post">
+        {% for i in cart.cartitem_set.all %}
+            <p>{{i.menu.name}} x{{i.quantity}}</p>
+            <p>{{i.price}}</p>
+            <form action="{% url 'delete_cart_item' cart.customer.id i.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">🗑️</button>
+            </form>
+        {% endfor %}
+        <form action="{% url "customercart" cart.customer.id %}" method="post">
             {% csrf_token %}
-            {% for i in cart.cartitem_set.all %}
-                <p>{{i.menu.name}} x{{i.quantity}}</p>
-                <p>{{i.price}}</p>
-            {% endfor %}
-            <button type="submit">{{cart.sum}}</button>
+                <button type="submit">{{cart.sum}}</button>
         </form>
     {% endif %}
     {% if emp == 0 %}

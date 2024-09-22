@@ -107,7 +107,13 @@ class CartView(View):
             OrderItem.objects.create(order=orde, menu=i.menu, quantity=i.quantity, price=i.price)
         cart.delete()
         return redirect('selectshop', customer_id)
-        
+
+class DeleteCartView(View):
+    @transaction.atomic
+    def post(self, request, customer_id, item_id):
+        cartitem = CartItem.objects.get(cart__customer__id=customer_id, id=item_id)
+        cartitem.delete()
+        return redirect('customercart', customer_id)
 
 #ของน้องออม
 class ManageMenuView(View):

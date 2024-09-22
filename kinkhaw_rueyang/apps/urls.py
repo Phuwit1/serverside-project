@@ -9,6 +9,7 @@ urlpatterns = [
     path("<int:customer_id>/selectshop/<int:shop_id>/menu/", views.SelectMenuView.as_view(), name="selectmenu"),
     path("<int:customer_id>/selectshop/<int:shop_id>/menu/<int:menu_id>/", views.SelectMenuOrderView.as_view(), name="selectmenuorder"),
     path("<int:customer_id>/selectshop/cart/", views.CartView.as_view(), name="customercart"),
+    path("<int:customer_id>/selectshop/cart/delete/<int:item_id>", views.DeleteCartView.as_view(), name='delete_cart_item'),
     
     path('managemenu/', views.ManageMenuView.as_view(), name='manage_menu'),
     path('managemenu/create/', views.MenuCreateView.as_view(), name='menu_create'),
