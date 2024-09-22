@@ -125,7 +125,6 @@ class ManageMenuView(View):
         
         return render(request, 'manage_menu.html', {'menu_with_categories': menu_with_categories, 'categories': categories})
 
-# เพิ่มการอัปโหลดรูปจาก     image = models.FileField(upload_to='products/', blank=True, null=True) #not sure
 
 class MenuCreateView(View):
     def get(self, request):

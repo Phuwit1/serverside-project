@@ -15,4 +15,4 @@ urlpatterns = [
     path('managemenu/edit/<int:pk>/', views.MenuEditView.as_view(), name='menu_edit'),
     path('managemenu/delete/<int:pk>/', views.MenuDeleteView.as_view(), name='menu_delete'),
     # path('managemenu/category/<int:category_id>/', views.MenuCategoryView.as_view(), name='menu_category') ไม่จำเป้นละมั้ง
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # ใช้ + ในการรวม urlpatterns
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
