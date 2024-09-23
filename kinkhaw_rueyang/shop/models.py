@@ -23,7 +23,7 @@ class Menu(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    image = models.ImageField(upload_to='products/')
 
 
 class MenuCategory(models.Model):
