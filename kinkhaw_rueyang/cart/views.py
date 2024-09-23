@@ -17,11 +17,11 @@ class CartView(LoginRequiredMixin, PermissionRequiredMixin, View):
         try:
             cus = request.user
             query = Cart.objects.annotate(sum = Sum("cartitem__price")).get(customer__id=cus.id)
-            return render(request, "cus_cart.html", {
+            return render(request, "cart.html", {
                 'cart': query,
             })
         except ObjectDoesNotExist:
-            return render(request, "cus_cart.html", {
+            return render(request, "cart.html", {
                 'emp': 0,
             })
     
@@ -43,4 +43,19 @@ class DeleteCartView(LoginRequiredMixin, PermissionRequiredMixin, View):
         cus = request.user
         cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
         cartitem.delete()
+        return redirect('customercart')
+
+class CartItemView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def get(self, request, item_id):
+        cus = request.user
+        cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
+        return render(request, "cart_item.html", {"item": cartitem})
+    def post(self, request, item_id):
+        amount = int(request.POST.get('amount', 1))
+        cus = request.user
+        cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
+        cartitem.quantity = amount
+        cartitem.save()
         return redirect('customercart')

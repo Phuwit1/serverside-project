@@ -8,8 +8,10 @@
 <body>
     {% if cart %}
         {% for i in cart.cartitem_set.all %}
-            <p>{{i.menu.name}} x{{i.quantity}}</p>
-            <p>{{i.price}}</p>
+            <a href="{% url 'cartitemview' i.id %}">
+                <p>{{i.menu.name}} x{{i.quantity}}</p>
+                <p>{{i.price}}</p>
+            </a>
             <form action="{% url 'delete_cart_item' i.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit">🗑️</button>
