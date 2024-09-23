@@ -8,16 +8,20 @@
 <body>
     <form method="post">
         {% csrf_token %}
-        {% if menu %}
-            <h1>{{menu.name}}</h1>
-            <p>{{menu.description}}</p>
+        {% if item %}
+            <h1>{{item.menu.name}}</h1>
+            <p>{{item.menu.description}}</p>
             <label onclick=decreaseAmount()>-</label>
-            <label id='amount'>1</label>
+            <label id='amount'>{{item.quantity}}</label>
             <input type="hidden" id="amount_input" name="amount" value="1">
             <label onclick=increaseAmount()>+</label>
             <br>
-            <button type="submit">add to cart</button>
+            <button type="submit">save</button>
         {% endif %}
+    </form>
+    <form action="{% url 'delete_cart_item' item.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">🗑️</button>
     </form>
 </body>
 </html>
