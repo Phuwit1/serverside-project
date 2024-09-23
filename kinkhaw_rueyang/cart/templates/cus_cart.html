@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+    {% if cart %}
+        {% for i in cart.cartitem_set.all %}
+            <p>{{i.menu.name}} x{{i.quantity}}</p>
+            <p>{{i.price}}</p>
+            <form action="{% url 'delete_cart_item' i.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">🗑️</button>
+            </form>
+        {% endfor %}
+        <form action="{% url "customercart" %}" method="post">
+            {% csrf_token %}
+                <button type="submit">{{cart.sum}}</button>
+        </form>
+    {% endif %}
+    {% if emp == 0 %}
+        <h1>cart ว่างเปล่า</h1>
+    {% endif %}
+</body>
+</html>
