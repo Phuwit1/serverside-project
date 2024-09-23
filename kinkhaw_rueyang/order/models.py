@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Order(models.Model):
     class Status(models.Choices):
@@ -9,13 +9,13 @@ class Order(models.Model):
         Cancelled = "Cancelled"
     
     customer = models.ForeignKey(
-        "apps.Customer",
+        User,
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
     )
     shop = models.ForeignKey(
-        "apps.Shop",
+        "shop.Shop",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
@@ -26,13 +26,13 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
-        "apps.Order",
+        "order.Order",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
     )
-    menu = models.ForeignKey( #not sure
-        "apps.Menu",
+    menu = models.ForeignKey(
+        "shop.Menu",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True

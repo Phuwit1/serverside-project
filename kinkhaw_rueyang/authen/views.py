@@ -15,6 +15,7 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request,user)
+            return redirect('base')
 
 
 class LogoutView(View):
@@ -22,3 +23,7 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
+
+class BaseView(View):
+    def get(self, request):
+        return render(request, 'base.html')

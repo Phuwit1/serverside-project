@@ -1,9 +1,9 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Shop(models.Model):
     shopkeeper = models.ForeignKey(
-        "apps.Shopkeeper",
+        User,
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
@@ -15,7 +15,7 @@ class Shop(models.Model):
 
 class Menu(models.Model):
     shop = models.ForeignKey(
-        "apps.Shop",
+        "shop.Shop",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
@@ -27,7 +27,7 @@ class Menu(models.Model):
 
 
 class MenuCategory(models.Model):
-    menu = models.ManyToManyField("apps.Menu")
+    menu = models.ManyToManyField("shop.Menu")
     name = models.CharField(max_length=100)
     
     def __str__(self):

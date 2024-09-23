@@ -1,10 +1,10 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Cart(models.Model):
-    customer = models.OneToOneField("apps.Customer", on_delete=models.PROTECT)
+    customer = models.OneToOneField(User, on_delete=models.PROTECT)
     shop = models.ForeignKey(
-        "apps.Shop",
+        "shop.Shop",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
@@ -12,13 +12,13 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(
-        "apps.Cart",
+        "cart.Cart",
         on_delete=models.CASCADE, 
         null=True, 
         blank=True
     )
     menu = models.ForeignKey(
-        "apps.Menu",
+        "shop.Menu",
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True
