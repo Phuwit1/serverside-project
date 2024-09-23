@@ -3,15 +3,16 @@ from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 class LoginView(View):
     
     def get(self, request):
         form = AuthenticationForm()
-        return render(request, 'login.html', {"form": form})
+        return render(request, 'login.html', {"form": None})
     
     def post(self, request):
-        form = AuthenticationForm(request.POST)
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request,user)
@@ -24,6 +25,8 @@ class LogoutView(View):
         logout(request)
         return redirect('login')
 
-class BaseView(View):
+class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
     def get(self, request):
         return render(request, 'base.html')

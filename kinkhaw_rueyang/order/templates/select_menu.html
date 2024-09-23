@@ -15,7 +15,7 @@
     {% if menu %}
         <div>
             {% for i in menu %}
-                {% url "selectmenuorder" cus.id shop.id i.id as selmeor %}
+                {% url "selectmenuorder" shop.id i.id as selmeor %}
                 <div style="background-color: yellow;">
                     <a href="{{selmeor}}">
                         <div>

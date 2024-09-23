@@ -15,7 +15,6 @@ class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = []
     def get(self, request):
-        user = request.user
         queries = Shop.objects.all()
         for query in queries:
             query.count_order = query.order_set.exclude(order_status__in=["Completed", "Cancelled"]).count()
@@ -54,26 +53,25 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
     
     @transaction.atomic
-    def post(self, request, menu_id, shop_id, customer_id):
+    def post(self, request, menu_id, shop_id):
         amount = int(request.POST.get('amount', 1))
-        cart = Cart.objects.filter(customer__id=customer_id).first() #.first เพราะถ้าไม่มีจะreturn none
+        cus = request.user.id
+        cart = Cart.objects.filter(customer__id=cus).first() #.first เพราะถ้าไม่มีจะreturn none
         if cart is None:
-            cus = Customer.objects.get(id=customer_id)
             shops = Shop.objects.get(id=shop_id)
-            carts = Cart.objects.create(customer=cus, shop=shops)
+            carts = Cart.objects.create(customer=request.user, shop=shops)
             menus = Menu.objects.get(id=menu_id)
             CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
         else:
-            carts = Cart.objects.get(customer__id=customer_id)
+            carts = Cart.objects.get(customer__id=cus)
             if carts.shop.id == shop_id:
                 menus = Menu.objects.get(id=menu_id)
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
             else:
                 carts.delete()
                 messages.warning(request, 'อาหารในcartจะถูกลบเนื่องจากคุณทำการเปลี่ยนร้าน')
-                cus = Customer.objects.get(id=customer_id)
                 shops = Shop.objects.get(id=shop_id)
-                carts = Cart.objects.create(customer=cus, shop=shops)
+                carts = Cart.objects.create(customer=request.user, shop=shops)
                 menus = Menu.objects.get(id=menu_id)
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
-        return redirect('selectmenu', customer_id, shop_id)
+        return redirect('selectmenu', shop_id)
