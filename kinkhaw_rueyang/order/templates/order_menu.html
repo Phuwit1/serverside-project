@@ -11,12 +11,12 @@
         {% if menu %}
             <h1>{{menu.name}}</h1>
             <p>{{menu.description}}</p>
-            <label onclick=decreaseAmount()>-</label>
+            <label onclick="decreaseAmount()">-</label>
             <label id='amount'>1</label>
             <input type="hidden" id="amount_input" name="amount" value="1">
-            <label onclick=increaseAmount()>+</label>
+            <label onclick="increaseAmount()">+</label>
             <br>
-            <button type="submit">add to cart</button>
+            <button type="submit" onclick="checkshop({{ menu.shop.id }}, {{ cart }})">add to cart</button>
         {% endif %}
     </form>
 </body>
@@ -41,5 +41,11 @@
         currentAmount += 1;
         amountLabel.innerHTML = currentAmount;
         amountInput.value = currentAmount;
+    }
+
+    function checkshop(shop, cart){
+        if (shop != cart && cart != 0){
+            alert("อาหารใน cart เก่าจะถูกลบเนื่องจากทำการสั่งอาหารร้านใหม่");
+        }
     }
 </script>

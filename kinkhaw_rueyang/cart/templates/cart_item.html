@@ -13,7 +13,7 @@
             <p>{{item.menu.description}}</p>
             <label onclick=decreaseAmount()>-</label>
             <label id='amount'>{{item.quantity}}</label>
-            <input type="hidden" id="amount_input" name="amount" value="1">
+            <input type="hidden" id="amount_input" name="amount" value="{{item.quantity}}">
             <label onclick=increaseAmount()>+</label>
             <br>
             <button type="submit">save</button>

@@ -44,12 +44,12 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, menu_id, shop_id):
         try:
             query = Menu.objects.get(id=menu_id, shop__id=shop_id)
-            query2 = request.user
+            cart = Cart.objects.filter(customer__id=request.user.id).first()
         except ObjectDoesNotExist:
             return HttpResponse("<h1 style='font-size:100px'>ไม่พบเมนูนี้ในร้านนี้😒🥲</h1>")
         return render(request, "order_menu.html", {
             "menu": query,
-            "cus": query2,
+            "cart": cart.shop.id if cart != None else 0,
         })
     
     @transaction.atomic
@@ -69,7 +69,6 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
             else:
                 carts.delete()
-                messages.warning(request, 'อาหารในcartจะถูกลบเนื่องจากคุณทำการเปลี่ยนร้าน')
                 shops = Shop.objects.get(id=shop_id)
                 carts = Cart.objects.create(customer=request.user, shop=shops)
                 menus = Menu.objects.get(id=menu_id)

@@ -42,7 +42,11 @@ class DeleteCartView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, item_id):
         cus = request.user
         cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
+        cart = cartitem.cart
         cartitem.delete()
+        count_cart = cart.cartitem_set.count()
+        if count_cart == 0:
+            cart.delete()
         return redirect('customercart')
 
 class CartItemView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -57,5 +61,6 @@ class CartItemView(LoginRequiredMixin, PermissionRequiredMixin, View):
         cus = request.user
         cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
         cartitem.quantity = amount
+        cartitem.price = amount * cartitem.menu.price
         cartitem.save()
         return redirect('customercart')
