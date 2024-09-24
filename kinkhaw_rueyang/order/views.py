@@ -29,13 +29,11 @@ class SelectMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
         try:
             query = Menu.objects.filter(shop__id=shop_id)
             query2 = Shop.objects.get(id=shop_id)
-            query3 = request.user
         except ObjectDoesNotExist:
             return HttpResponse("<h1 style='font-size:100px'>ไม่พบร้านอาหารนี้ 🤔</h1>")
         return render(request, "select_menu.html", {
             "menu": query,
             "shop": query2,
-            "cus": query3
         })
 
 class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
