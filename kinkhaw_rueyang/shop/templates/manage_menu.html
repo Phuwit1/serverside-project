@@ -1,4 +1,3 @@
-{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Menu</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'style.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -39,12 +37,13 @@
                 <td>{{ menu_data.item.description }}</td>
                 <td>
                     {% if menu_data.item.image %}
-                    <img src="{{ menu_data.item.image.url }}" alt="{{ menu_data.item.name }}"
-                        style="max-width: 100px; max-height: 100px;">
+                        <img src="{{ menu_data.item.image.url }}" alt="{{ menu_data.item.name }}"
+                             style="max-width: 100px; max-height: 100px; object-fit: cover;">
                     {% else %}
-                    <span>No Image</span>
+                        <span style="color: gray;">No Image Available</span>
                     {% endif %}
                 </td>
+                
 
 
                 <td>
