@@ -12,13 +12,15 @@
             <p>{{shop.description}}</p>
         </div>
     {% endif %}
-
-    {% if category %}
-        {% for i in category %}
-            <p>{{i}}</p>
-        {% endfor %}
-    {% endif %}
-
+    
+    <div>
+        <a href="{% url 'selectmenu' shop.id 0 %}">Main</a>
+        {% if category %}
+            {% for i in category %}
+                <a href="{% url 'selectmenu' shop.id i.id %}">{{i}}</a>
+            {% endfor %}
+        {% endif %}
+    </div>
     {% if menu %}
         <div>
             {% for i in menu %}
@@ -40,7 +42,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <h1>ร้านนี้ยังไม่มีเมนูอะไรเลย🥲</h1>
+        <h1>Cartว่าง.jpg 🥲</h1>
     {% endif %}
     <divn >
     </div>

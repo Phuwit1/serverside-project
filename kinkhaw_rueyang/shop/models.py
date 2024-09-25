@@ -29,6 +29,12 @@ class Menu(models.Model):
 class MenuCategory(models.Model):
     menu = models.ManyToManyField("shop.Menu")
     name = models.CharField(max_length=100)
+    shop = models.ForeignKey(
+        "shop.Shop",
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+    )
     
     def __str__(self):
         return self.name
