@@ -13,6 +13,12 @@ class MenuForm(forms.ModelForm):
         required=False,
         label="Categories"
     )
+    
+    shop = forms.ModelChoiceField(
+        queryset=Shop.objects.all(),
+        required=True,
+        label="เลือกร้านค้า"
+    )
 
     class Meta:
         model = Menu
