@@ -12,6 +12,13 @@
             <p>{{shop.description}}</p>
         </div>
     {% endif %}
+
+    {% if category %}
+        {% for i in category %}
+            <p>{{i}}</p>
+        {% endfor %}
+    {% endif %}
+
     {% if menu %}
         <div>
             {% for i in menu %}
@@ -22,6 +29,11 @@
                             <p>{{i.name}}</p>
                             <p>{{i.description}}</p>
                             <p>{{i.price}}</p>
+                            {% if i.image %}
+                                <img src="{{ i.image.url }}" alt="{{ i.name }}" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                            {% else %}
+                                <span style="color: gray;">No Image Available</span>
+                            {% endif %}
                         </div>
                     </a>
                 </div>

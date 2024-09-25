@@ -8,7 +8,7 @@ from django.db.models import F, Q, Count, Sum
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from shop.models import Shop, Menu
+from shop.models import Shop, Menu, MenuCategory
 from cart.models import Cart, CartItem
 
 class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -29,11 +29,13 @@ class SelectMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
         try:
             query = Menu.objects.filter(shop__id=shop_id)
             query2 = Shop.objects.get(id=shop_id)
+            query3 = MenuCategory.objects.all()
         except ObjectDoesNotExist:
             return HttpResponse("<h1 style='font-size:100px'>ไม่พบร้านอาหารนี้ 🤔</h1>")
         return render(request, "select_menu.html", {
             "menu": query,
             "shop": query2,
+            "category": query3,
         })
 
 class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
