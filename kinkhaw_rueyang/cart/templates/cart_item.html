@@ -4,46 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        {% if item %}
-            <h1>{{item.menu.name}}</h1>
-            <p>{{item.menu.description}}</p>
-            <label onclick=decreaseAmount()>-</label>
-            <label id='amount'>{{item.quantity}}</label>
-            <input type="hidden" id="amount_input" name="amount" value="{{item.quantity}}">
-            <label onclick=increaseAmount()>+</label>
-            <br>
-            <button type="submit">save</button>
-        {% endif %}
-    </form>
-    <form action="{% url 'delete_cart_item' item.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">🗑️</button>
-    </form>
-</body>
-</html>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .image-crop {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
 
-<script>
-    function decreaseAmount() {
-        let amountLabel = document.getElementById('amount');
-        let amountInput = document.getElementById('amount_input');
-        let currentAmount = parseInt(amountLabel.innerHTML);
-        if (currentAmount > 1) {
-            currentAmount -= 1;
+        .image-crop img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: auto;
+            height: auto;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {% if item %}
+                <div class="image-crop">
+                    {% if item.menu.image %}
+                        <img src="{{ item.menu.image.url }}" alt="{{ item.menu.name }}" class="img-fluid">
+                    {% else %}
+                        <span class="text-muted">No Image Available</span>
+                    {% endif %}
+                </div>
+                <h1 class="h4">{{item.menu.name}}</h1>
+                <p>{{item.menu.description}}</p>
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <label class="amount-label" onclick="decreaseAmount()">-</label>
+                    <label id='amount' class="mx-3">{{item.quantity}}</label>
+                    <input type="hidden" id="amount_input" name="amount" value="{{item.quantity}}">
+                    <label class="amount-label" onclick="increaseAmount()">+</label>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+            {% endif %}
+        </form>
+        <form action="{% url 'delete_cart_item' item.id %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+        </form>
+    </div>
+
+    <script>
+        function decreaseAmount() {
+            let amountLabel = document.getElementById('amount');
+            let amountInput = document.getElementById('amount_input');
+            let currentAmount = parseInt(amountLabel.innerHTML);
+            if (currentAmount > 1) {
+                currentAmount -= 1;
+                amountLabel.innerHTML = currentAmount;
+                amountInput.value = currentAmount;
+            }
+        }
+
+        function increaseAmount() {
+            let amountLabel = document.getElementById('amount');
+            let amountInput = document.getElementById('amount_input');
+            let currentAmount = parseInt(amountLabel.innerHTML);
+            currentAmount += 1;
             amountLabel.innerHTML = currentAmount;
             amountInput.value = currentAmount;
         }
-    }
-
-    function increaseAmount() {
-        let amountLabel = document.getElementById('amount');
-        let amountInput = document.getElementById('amount_input');
-        let currentAmount = parseInt(amountLabel.innerHTML);
-        currentAmount += 1;
-        amountLabel.innerHTML = currentAmount;
-        amountInput.value = currentAmount;
-    }
-</script>
+    </script>
+</body>
+</html>

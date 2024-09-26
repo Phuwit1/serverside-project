@@ -16,6 +16,23 @@
         .frame {
             margin: 15px
         }
+        .image-crop {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-crop img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: auto;
+            height: auto;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
@@ -23,6 +40,13 @@
         {% csrf_token %}
         {% if menu %}
             <div class="frame">
+                <div class="image-crop">
+                    {% if menu.image %}
+                        <img src="{{ menu.image.url }}" alt="{{ menu.name }}" class="img-fluid">
+                    {% else %}
+                        <span class="text-muted">No Image Available</span>
+                    {% endif %}
+                </div>
                 <h1>{{menu.name}}</h1>
                 <p>{{menu.description}}</p>
                 <div class="d-flex justify-content-center align-items-center mb-4">
