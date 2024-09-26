@@ -4,48 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    {% if shop %}
-        <div style="background-color: pink;">
-            <h1>{{shop.name}}</h1>
-            <p>{{shop.description}}</p>
-        </div>
-    {% endif %}
-    
-    <div>
-        <a href="{% url 'selectmenu' shop.id 0 %}">Main</a>
-        {% if category %}
-            {% for i in category %}
-                <a href="{% url 'selectmenu' shop.id i.id %}">{{i}}</a>
-            {% endfor %}
+    <div class="container mt-5">
+        {% if shop %}
+            <div class="bg-pink p-4 mb-4">
+                <h1 class="text-center">{{shop.name}}</h1>
+                <p class="text-center">{{shop.description}}</p>
+            </div>
         {% endif %}
-    </div>
-    {% if menu %}
-        <div>
-            {% for i in menu %}
-                {% url "selectmenuorder" shop.id i.id as selmeor %}
-                <div style="background-color: yellow;">
-                    <a href="{{selmeor}}">
-                        <div>
-                            <p>{{i.name}}</p>
-                            <p>{{i.description}}</p>
-                            <p>{{i.price}}</p>
-                            {% if i.image %}
-                                <img src="{{ i.image.url }}" alt="{{ i.name }}" style="max-width: 100px; max-height: 100px; object-fit: cover;">
-                            {% else %}
-                                <span style="color: gray;">No Image Available</span>
-                            {% endif %}
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
+        
+        <div class="mb-4">
+            <a href="{% url 'selectmenu' shop.id 0 %}" class="btn btn-primary">Main</a>
+            {% if category %}
+                {% for i in category %}
+                    <a href="{% url 'selectmenu' shop.id i.id %}" class="btn btn-secondary mx-1">{{i}}</a>
+                {% endfor %}
+            {% endif %}
         </div>
-    {% else %}
-        <h1>Cartว่าง.jpg 🥲</h1>
-    {% endif %}
-    <divn >
+
+        {% if menu %}
+            <div class="row">
+                {% for i in menu %}
+                    {% url "selectmenuorder" shop.id i.id as selmeor %}
+                    <div class="col-md-12 mb-4">
+                        <div class="card">
+                            <a href="{{selmeor}}" class="text-decoration-none">
+                                <div class="card-body bg-warning">
+                                    <h5 class="card-title">{{i.name}}</h5>
+                                    <p class="card-text">{{i.description}}</p>
+                                    <p class="card-text"><strong>Price: {{i.price}}</strong></p>
+                                    {% if i.image %}
+                                        <img src="{{ i.image.url }}" alt="{{ i.name }}" class="img-fluid" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                                    {% else %}
+                                        <span class="text-muted">No Image Available</span>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h1 class="text-center">Cartว่าง.jpg 🥲</h1>
+        {% endif %}
     </div>
 </body>
 </html>
-

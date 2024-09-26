@@ -4,21 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    {% if shop %}
-        {% for i in shop %}
-            {% url "selectmenu" i.id 0 as selm %}
-            <a href="{{selm}}" style="color: black; text-decoration: none;"> {%comment%} เพิ่ม style ไว้เฉยๆ แยกไว้ข้างนอกทีหลัง {%endcomment%} 
-                <div style="background-color: yellow;">
-                    <h1>{{i.name}}</h1>
-                    <p>{{i.description}}</p>
-                    <p>{{i.count_order}}</p>
-                </div>
-            </a>
-        {% endfor %}
-    {% else %}
-        <h1>🐋 ไม่มีร้านไหนเปิดเลยแย่จัง 🐋</h1>
-    {% endif %}
+    <div class="container mt-5">
+        {% if shop %}
+            <div class="row">
+                {% for i in shop %}
+                    {% url "selectmenu" i.id 0 as selm %}
+                    <div class="col-md-4 mb-4">
+                        <a href="{{selm}}" class="text-dark text-decoration-none">
+                            <div class="card">
+                                <div class="card-body bg-warning">
+                                    <h5 class="card-title">{{i.name}}</h5>
+                                    <p class="card-text">{{i.description | truncatechars:100}}</p>
+                                    <p class="card-text"><strong>Orders: {{i.count_order}}</strong></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h1 class="text-center">🐋 ไม่มีร้านไหนเปิดเลยแย่จัง 🐋</h1>
+        {% endif %}
+    </div>
+
+    {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> {% endcomment %}
 </body>
 </html>

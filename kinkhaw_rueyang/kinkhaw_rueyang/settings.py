@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'order',
     'shop',
     'authen',
+    'sweetify',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,6 @@ MEDIA_DIR = BASE_DIR / 'media'
 # ตั้งค่า MEDIA_URL และ MEDIA_ROOT
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
+
+
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
