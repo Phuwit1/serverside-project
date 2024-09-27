@@ -97,3 +97,24 @@ class SelectMenuSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "shop": query2,
             "category": query3,
         })
+
+class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def get(self, request, status):
+        user = request.user
+        if status == 'pending': 
+            query = Order.objects.filter(customer__id=user.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).order_by("-id")
+            for i in query:
+                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).count()
+            status = True
+        elif status == 'completed':
+            query = Order.objects.filter(customer__id=user.id, order_status='Completed').order_by('-id')
+            status = False
+        elif status == 'cancelled':
+            query = Order.objects.filter(customer__id=user.id, order_status='Cancelled').order_by('-id')
+            status = False
+        return render(request, "view_order.html", {
+            "order": query,
+            "status": status,
+        })
