@@ -7,9 +7,16 @@ from django.contrib.auth import authenticate
 
 
 class MenuForm(forms.ModelForm):
+    
+    new_category = forms.CharField(
+        max_length=100, 
+        required=False, 
+        label="Add New Category"
+    )
+    
     categories = forms.ModelMultipleChoiceField(
         queryset=MenuCategory.objects.all(),
-        widget=forms.CheckboxSelectMultiple, 
+        widget=forms.CheckboxSelectMultiple,
         required=False,
         label="Categories"
     )
@@ -20,6 +27,8 @@ class MenuForm(forms.ModelForm):
         label="เลือกร้านค้า"
     )
 
+    
+
     class Meta:
         model = Menu
-        fields = ['name', 'price', 'description', 'image', 'categories']
+        fields = ['name', 'price', 'description', 'image', 'categories', 'new_category', 'shop']
