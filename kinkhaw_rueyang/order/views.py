@@ -79,3 +79,21 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 menus = Menu.objects.get(id=menu_id)
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
         return redirect('selectmenu', shop_id, 0)
+
+
+class SelectMenuSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def post(self, request, shop_id):
+        try:
+            search = request.POST.get('search')
+            query = Menu.objects.filter(shop__id=shop_id, name__icontains=search)
+            query2 = Shop.objects.get(id=shop_id)
+            query3 = MenuCategory.objects.filter(shop__id=shop_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("<h1 style='font-size:100px'>ไม่พบร้านอาหารนี้ 🤔</h1>")
+        return render(request, "select_menu.html", {
+            "menu": query,
+            "shop": query2,
+            "category": query3,
+        })

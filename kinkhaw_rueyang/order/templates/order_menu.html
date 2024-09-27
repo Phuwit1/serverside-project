@@ -49,34 +49,39 @@
     </style>
 </head>
 <body>
-    <div class="top-right">
-        <a href="{% url "selectmenu" menu.shop.id 0 %}"><i class="bi bi-x-circle-fill larger-icon"></i></a>
-    </div>
-    <form method="post" id="form">
-        {% csrf_token %}
-        {% if menu %}
-            <div class="frame">
-                <div class="image-crop">
-                    {% if menu.image %}
-                        <img src="{{ menu.image.url }}" alt="{{ menu.name }}" class="img-fluid">
-                    {% else %}
-                        <span class="text-muted">No Image Available</span>
-                    {% endif %}
+    <div class="container mt-5">
+        <div class="top-right">
+            <a href="{% url "selectmenu" menu.shop.id 0 %}"><i class="bi bi-x-circle-fill larger-icon"></i></a>
+        </div>
+        <form method="post" id="form">
+            {% csrf_token %}
+            {% if menu %}
+                <div class="frame">
+                    <div class="image-crop">
+                        {% if menu.image %}
+                            <img src="{{ menu.image.url }}" alt="{{ menu.name }}" class="img-fluid">
+                        {% else %}
+                            <span class="text-muted">No Image Available</span>
+                        {% endif %}
+                    </div>
+                    <h1>{{menu.name}}</h1>
+                    <p>{{menu.description}}</p>
+                    <div class="d-flex justify-content-center align-items-center mb-4">
+                        <label class="amount-label" onclick="decreaseAmount()">-</label>
+                        <label id="amount" class="mx-3">1</label>
+                        <input type="hidden" id="amount_input" name="amount" value="1">
+                        <label class="amount-label" onclick="increaseAmount()">+</label>
+                    </div>
                 </div>
-                <h1>{{menu.name}}</h1>
-                <p>{{menu.description}}</p>
-                <div class="d-flex justify-content-center align-items-center mb-4">
-                    <label class="amount-label" onclick="decreaseAmount()">-</label>
-                    <label id="amount" class="mx-3">1</label>
-                    <input type="hidden" id="amount_input" name="amount" value="1">
-                    <label class="amount-label" onclick="increaseAmount()">+</label>
-                </div>
-            </div>
-        {% endif %}
-    </form>
-    <div class="text-center">
-        <button class="btn btn-primary" onclick="checkshop({{ menu.shop.id }}, {{ cart }}, form)">Add to Cart</button>
+            {% endif %}
+        </form>
+        <div class="text-center">
+            <button class="btn btn-primary" onclick="checkshop({{ menu.shop.id }}, {{ cart }}, form)">Add to Cart</button>
+        </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 
