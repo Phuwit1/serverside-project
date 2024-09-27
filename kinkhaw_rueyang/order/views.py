@@ -79,3 +79,42 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 menus = Menu.objects.get(id=menu_id)
                 CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
         return redirect('selectmenu', shop_id, 0)
+
+
+class SelectMenuSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def post(self, request, shop_id):
+        try:
+            search = request.POST.get('search')
+            query = Menu.objects.filter(shop__id=shop_id, name__icontains=search)
+            query2 = Shop.objects.get(id=shop_id)
+            query3 = MenuCategory.objects.filter(shop__id=shop_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("<h1 style='font-size:100px'>ไม่พบร้านอาหารนี้ 🤔</h1>")
+        return render(request, "select_menu.html", {
+            "menu": query,
+            "shop": query2,
+            "category": query3,
+        })
+
+class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def get(self, request, status):
+        user = request.user
+        if status == 'pending': 
+            query = Order.objects.filter(customer__id=user.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).order_by("-id")
+            for i in query:
+                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).count()
+            status = True
+        elif status == 'completed':
+            query = Order.objects.filter(customer__id=user.id, order_status='Completed').order_by('-id')
+            status = False
+        elif status == 'cancelled':
+            query = Order.objects.filter(customer__id=user.id, order_status='Cancelled').order_by('-id')
+            status = False
+        return render(request, "view_order.html", {
+            "order": query,
+            "status": status,
+        })

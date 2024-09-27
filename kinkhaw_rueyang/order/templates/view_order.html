@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+</head>
+<body>
+    {% if order %}
+        {% for i in order %}
+            <div style="background-color: yellow;">
+                <p>{{i.shop.name}}</p>
+                <p>{{i.total_price}}</p>
+                <p>{{i.order_date}}</p>
+                <p>{{i.order_status}}</p>
+                {% if status %}
+                    <h1>ตอนนี้มี {{i.order_count}} คิวก่อนหน้า</h1>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
