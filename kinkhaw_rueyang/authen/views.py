@@ -4,7 +4,23 @@ from django.contrib import messages
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .models import UserProfile 
+from django.contrib.auth.forms import UserCreationForm
 
+class RegisterView(View):
+    def get(self, request):
+        form = UserCreationForm() 
+        return render(request, 'register.html', {'form': form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  
+            messages.success(request, "ลงทะเบียนสำเร็จ!")
+            return redirect('login')  
+        return render(request, 'register.html', {'form': form})
+    
 class LoginView(View):
     
     def get(self, request):
