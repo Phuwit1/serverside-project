@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'shop',
     'authen',
     'sweetify',
+    
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -142,7 +145,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_DIR = BASE_DIR / 'media'
-# ตั้งค่า MEDIA_URL และ MEDIA_ROOT
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
