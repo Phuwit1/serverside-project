@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .models import UserProfile 
 from django.contrib.auth.forms import UserCreationForm
 
+
 class RegisterView(View):
     def get(self, request):
         form = UserCreationForm() 
@@ -16,10 +17,15 @@ class RegisterView(View):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+           
+            user_profile = UserProfile.objects.create(user=user, role='customer')
+            user_profile.save()
+
             login(request, user)  
             messages.success(request, "ลงทะเบียนสำเร็จ!")
-            return redirect('login')  
+            return redirect('login') 
         return render(request, 'register.html', {'form': form})
+    
     
 class LoginView(View):
     
@@ -33,6 +39,8 @@ class LoginView(View):
             user = form.get_user()
             login(request,user)
             return redirect('base')
+        else:
+            return render(request, 'login.html', {'form':form})
 
 
 class LogoutView(View):
