@@ -4,32 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .card {
+            background-color: #ffeb3b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+    </style>
 </head>
 <body>
     {% include 'nav.html' %}
-    {% if order %}
-        <a href="{% url 'vieworder' 'pending' %}">
-            <button>Pending</button>
-        </a>
-        <a href="{% url 'vieworder' 'completed' %}">
-            <button>Completed</button>
-        </a>
-        <a href="{% url 'vieworder' 'cancelled' %}">
-            <button>Cancelled</button>
-        </a>
-        {% for i in order %}
-            <a href="{% url 'vieworderdetail' i.id %}">
-                <div style="background-color: yellow;">
-                    <p>{{i.shop.name}}</p>
-                    <p>{{i.total_price}}</p>
-                    <p>{{i.order_date}}</p>
-                    <p>{{i.order_status}}</p>
-                    {% if status %}
-                        <h1>คิวของคุณอยู่ลำดับที่ {{i.order_count}}</h1>
-                    {% endif %}
-                </div>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <a href="{% url 'vieworder' 'pending' %}">
+                <button class="btn btn-primary">Pending</button>
             </a>
-        {% endfor %}
-    {% endif %}
+            <a href="{% url 'vieworder' 'completed' %}">
+                <button class="btn btn-success">Completed</button>
+            </a>
+            <a href="{% url 'vieworder' 'cancelled' %}">
+                <button class="btn btn-danger">Cancelled</button>
+            </a>
+        </div>
+        {% if order %}
+            {% for i in order %}
+                <a href="{% url 'vieworderdetail' i.id %}">
+                    <div class="card">
+                        <p>{{i.shop.name}}</p>
+                        <p>{{i.total_price}}</p>
+                        <p>{{i.order_date}}</p>
+                        <p>{{i.order_status}}</p>
+                        {% if status %}
+                            <h1>คิวของคุณอยู่ลำดับที่ {{i.order_count}}</h1>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <h1 class="text-center">ยังไม่มี Order</h1>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
