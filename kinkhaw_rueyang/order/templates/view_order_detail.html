@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+</head>
+<body>
+    {% include 'nav.html' %}
+    {% if order %}
+        <h1>{{order.order_status}}</h1>
+        {% for i in order_item %}
+            <h2>{{i.menu.name}}</h2>
+            <p>{{i.quantity}}</p>
+            <p>{{i.price}}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

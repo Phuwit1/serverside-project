@@ -104,9 +104,9 @@ class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, status):
         user = request.user
         if status == 'pending': 
-            query = Order.objects.filter(customer__id=user.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).order_by("-id")
+            query = Order.objects.filter(customer__id=user.id, order_status__in=["Order", "Cooking"]).order_by("-id")
             for i in query:
-                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id).filter(Q(order_status="Order") | Q(order_status="Cooking")).count()
+                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id, order_status__in=["Order", "Cooking"]).count()
             status = True
         elif status == 'completed':
             query = Order.objects.filter(customer__id=user.id, order_status='Completed').order_by('-id')
@@ -117,4 +117,16 @@ class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, "view_order.html", {
             "order": query,
             "status": status,
+        })
+
+class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def get(self, request, order_id):
+        user = request.user
+        query = Order.objects.get(id=order_id)
+        query2 = query.orderitem_set.all()
+        return render(request, "view_order_detail.html", {
+            "order": query,
+            "order_item": query2,
         })

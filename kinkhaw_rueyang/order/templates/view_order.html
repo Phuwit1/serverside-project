@@ -6,17 +6,29 @@
     <title>Order</title>
 </head>
 <body>
+    {% include 'nav.html' %}
     {% if order %}
+        <a href="{% url 'vieworder' 'pending' %}">
+            <button>Pending</button>
+        </a>
+        <a href="{% url 'vieworder' 'completed' %}">
+            <button>Completed</button>
+        </a>
+        <a href="{% url 'vieworder' 'cancelled' %}">
+            <button>Cancelled</button>
+        </a>
         {% for i in order %}
-            <div style="background-color: yellow;">
-                <p>{{i.shop.name}}</p>
-                <p>{{i.total_price}}</p>
-                <p>{{i.order_date}}</p>
-                <p>{{i.order_status}}</p>
-                {% if status %}
-                    <h1>ตอนนี้มี {{i.order_count}} คิวก่อนหน้า</h1>
-                {% endif %}
-            </div>
+            <a href="{% url 'vieworderdetail' i.id %}">
+                <div style="background-color: yellow;">
+                    <p>{{i.shop.name}}</p>
+                    <p>{{i.total_price}}</p>
+                    <p>{{i.order_date}}</p>
+                    <p>{{i.order_status}}</p>
+                    {% if status %}
+                        <h1>คิวของคุณอยู่ลำดับที่ {{i.order_count}}</h1>
+                    {% endif %}
+                </div>
+            </a>
         {% endfor %}
     {% endif %}
 </body>
