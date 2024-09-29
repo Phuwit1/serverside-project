@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import UserProfile 
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.models import Group
 
 class RegisterView(View):
     def get(self, request):
@@ -21,6 +21,11 @@ class RegisterView(View):
             user_profile = UserProfile.objects.create(user=user, role='customer')
             user_profile.save()
 
+            #test
+            group = Group.objects.get(name="Customer")
+            group.user_set.add(user)
+            
+            
             login(request, user)  
             messages.success(request, "ลงทะเบียนสำเร็จ!")
             return redirect('login') 
