@@ -13,6 +13,7 @@
             border-radius: 10px;
             margin-bottom: 15px;
             transition: transform 0.2s;
+            color: black;
         }
     </style>
 </head>
@@ -20,24 +21,24 @@
     {% include 'nav.html' %}
     <div class="container mt-5">
         <div class="text-center mb-4">
-            <a href="{% url 'vieworder' 'pending' %}">
+            <a href="{% url 'vieworder' 'pending' %}" class="mx-2">
                 <button class="btn btn-primary">Pending</button>
             </a>
-            <a href="{% url 'vieworder' 'completed' %}">
+            <a href="{% url 'vieworder' 'completed' %}" class="mx-2">
                 <button class="btn btn-success">Completed</button>
             </a>
-            <a href="{% url 'vieworder' 'cancelled' %}">
+            <a href="{% url 'vieworder' 'cancelled' %}" class="mx-2">
                 <button class="btn btn-danger">Cancelled</button>
             </a>
         </div>
         {% if order %}
             {% for i in order %}
-                <a href="{% url 'vieworderdetail' i.id %}">
+                <a href="{% url 'vieworderdetail' i.id %}" class="text-decoration-none">
                     <div class="card">
-                        <p>{{i.shop.name}}</p>
-                        <p>{{i.total_price}}</p>
-                        <p>{{i.order_date}}</p>
-                        <p>{{i.order_status}}</p>
+                        <p>ร้านชื่อ: {{i.shop.name}}</p>
+                        <p>ราคารวม: {{i.total_price}}</p>
+                        <p>วันที่: {{i.order_date | date:"d-m-Y"}}</p>
+                        <p>สถานะ: {{i.order_status}}</p>
                         {% if status %}
                             <h1>คิวของคุณอยู่ลำดับที่ {{i.order_count}}</h1>
                         {% endif %}

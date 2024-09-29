@@ -28,7 +28,7 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <form method="post" class="mb-4">
+        <form method="post" class="mb-4" id="form">
             {% csrf_token %}
             {% if item %}
                 <div class="image-crop">
@@ -46,13 +46,15 @@
                     <input type="hidden" id="amount_input" name="amount" value="{{item.quantity}}">
                     <label class="amount-label" onclick="increaseAmount()">+</label>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
             {% endif %}
         </form>
-        <form action="{% url 'delete_cart_item' item.id %}" method="post" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-        </form>
+        <div class="d-flex justify-content-center">       
+            <button onclick="submitform()" class="btn btn-primary mr-2"><i class="fas fa-save"></i> Save</button>
+            <form action="{% url 'delete_cart_item' item.id %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+            </form>
+        </div>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -77,6 +79,10 @@
             currentAmount += 1;
             amountLabel.innerHTML = currentAmount;
             amountInput.value = currentAmount;
+        }
+
+        function submitform() {
+            document.getElementById('form').submit();
         }
     </script>
 </body>

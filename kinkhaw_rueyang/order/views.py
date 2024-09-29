@@ -106,7 +106,7 @@ class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if status == 'pending': 
             query = Order.objects.filter(customer__id=user.id, order_status__in=["Order", "Cooking"]).order_by("-id")
             for i in query:
-                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id, order_status__in=["Order", "Cooking"]).count()
+                i.order_count = Order.objects.filter(shop=i.shop, id__lt=i.id, order_status__in=["Order", "Cooking"]).count() + 1
             status = True
         elif status == 'completed':
             query = Order.objects.filter(customer__id=user.id, order_status='Completed').order_by('-id')

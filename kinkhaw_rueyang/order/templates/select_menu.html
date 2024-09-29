@@ -35,9 +35,10 @@
         }
 
         .card-body {
+            color: black;
             display: flex; /* ใช้ Flexbox */
             align-items: center; /* จัดแนวกลางในแนวตั้ง */
-            background-color: #FFC107; /* เปลี่ยนสีพื้นหลัง */
+            background-color: #ff7b5f; /* เปลี่ยนสีพื้นหลัง */
         }
         .info-container {
             display: flex;
@@ -79,7 +80,7 @@
                     <div class="col-md-12 mb-4">
                         <div class="card">
                             <a href="{{selmeor}}" class="text-decoration-none">
-                                <div class="card-body bg-warning">
+                                <div class="card-body">
                                     <div class="image-container">
                                         <div class="image-crop">
                                             {% if i.image %}

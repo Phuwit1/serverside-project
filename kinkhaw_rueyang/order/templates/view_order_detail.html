@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     {% include 'nav.html' %}
     <div class="container mt-5">
         {% if order %}
-            <h1>{{order.order_status}}</h1>
-            {% for i in order_item %}
-                <h2>{{i.menu.name}}</h2>
-                <p>{{i.quantity}}</p>
-                <p>{{i.price}}</p>
-            {% endfor %}
+            <h1 class="text-center mb-4">{{ order.order_status }}</h1>
+            <div class="list-group">
+                {% for i in order_item %}
+                    <div class="list-group-item">
+                        <h5 class="mb-1">{{ i.menu.name }}</h5>
+                        <p class="mb-1">Quantity: {{ i.quantity }}</p>
+                        <p class="mb-1">Price: {{ i.price }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h2 class="text-center">No order details available</h2>
         {% endif %}
+        <h2>ราคารวม: {{order.total_price}}</h2>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
