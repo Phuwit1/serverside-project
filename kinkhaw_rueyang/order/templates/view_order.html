@@ -15,6 +15,12 @@
             transition: transform 0.2s;
             color: black;
         }
+        .cancel-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +47,13 @@
                         <p>สถานะ: {{i.order_status}}</p>
                         {% if status %}
                             <h1>คิวของคุณอยู่ลำดับที่ {{i.order_count}}</h1>
+                        {% endif %}
+                        {% if i.order_status == "Order" %}
+                            <form method="post" class="cancel-button">
+                                {% csrf_token %}
+                                <input type="hidden" name="orderid" value="{{i.id}}">
+                                <button class="btn btn-danger">ยกเลิก</button>
+                            </form>
                         {% endif %}
                     </div>
                 </a>
