@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import CustomUserCreationForm
 from django.contrib.auth.models import Group
+from .forms import UserProfileForm
 
 class RegisterView(View):
     def get(self, request):
@@ -56,3 +57,13 @@ class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = []
     def get(self, request):
         return render(request, 'base.html')
+
+class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/authen/'
+    permission_required = []
+    def get(self, request):
+        user = request.user
+        form = UserProfileForm(instance=user)
+        return render(request, "myprofile.html", {
+            'form': form
+        })

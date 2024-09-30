@@ -118,6 +118,13 @@ class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "order": query,
             "status": status,
         })
+    
+    def post(self, request, status):
+        order = request.POST.get('orderid')
+        query = Order.objects.get(id=order)
+        query.order_status = "Cancelled"
+        query.save()
+        return redirect('vieworder', status)
 
 class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
