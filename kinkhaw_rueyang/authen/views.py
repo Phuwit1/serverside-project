@@ -4,17 +4,17 @@ from django.contrib import messages
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .forms import CustomUserCreationForm
+from .forms import UserProfileForm
 from django.contrib.auth.models import Group
 from .forms import UserProfileForm
 
 class RegisterView(View):
     def get(self, request):
-        form = CustomUserCreationForm()  
+        form = UserProfileForm()  
         return render(request, 'register.html', {'form': form})
 
     def post(self, request):
-        form = CustomUserCreationForm(request.POST)  
+        form = UserProfileForm(request.POST)  
         if form.is_valid():
             user = form.save()
 

@@ -1,5 +1,6 @@
 from django.db import models
-# from django.contrib.auth.models import User
+# from 
+from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     SEX_CHOICE = (
