@@ -10,6 +10,32 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import *
 
+class CheckLogin(LoginRequiredMixin, View):
+    login_url='/authen/'
+    
+    def get(self, request):
+        
+        if request.user.groups.filter(name='Shop').exists():
+            try:
+                shop=Shop.objects.get(shopkeeper=request.user)
+                return redirect('manage_menu')
+            except ObjectDoesNotExist:
+                return redirect('create_shop')
+
+class CreateShopView(View):
+    def get(self, request):
+        form = ShopForm()
+        return render(request, 'create_shop.html', {'form': form})
+
+    def post(self, request):
+        form = ShopForm(request.POST)
+        if form.is_valid():
+            shop = form.save(commit=False)
+            shop.shopkeeper = request.user
+            shop.save()
+            return redirect('manage_menu')  
+        return render(request, 'create_shop.html', {'form': form})
+
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = []
