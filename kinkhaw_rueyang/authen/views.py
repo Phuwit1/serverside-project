@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .forms import UserProfileForm
 from django.contrib.auth.models import Group
 from .forms import UserProfileForm
+from .models import UserProfile
 
 class RegisterView(View):
     def get(self, request):
@@ -62,8 +63,10 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = []
     def get(self, request):
-        user = request.user
+        use = request.user
+        user = UserProfile.objects.get(user=use)
         form = UserProfileForm(instance=user)
         return render(request, "myprofile.html", {
-            'form': form
+            'form': form,
+            'user': user,
         })
