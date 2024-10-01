@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    birth_date = models.DateField()
     phone_number = models.CharField(max_length=10)
     email = models.EmailField()
     sex = models.CharField(choices=SEX_CHOICE)

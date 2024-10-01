@@ -20,6 +20,7 @@ class UserProfileForm(forms.ModelForm):
             'image',
             'first_name',
             'last_name',
+            'birth_date',
             'phone_number',
             'email',
             'sex',
