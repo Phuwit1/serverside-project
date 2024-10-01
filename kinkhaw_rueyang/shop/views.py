@@ -10,17 +10,6 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import *
 
-class CheckLogin(LoginRequiredMixin, View):
-    login_url='/authen/'
-    
-    def get(self, request):
-        
-        if request.user.groups.filter(name='Shop').exists():
-            try:
-                shop=Shop.objects.get(shopkeeper=request.user)
-                return redirect('manage_menu')
-            except ObjectDoesNotExist:
-                return redirect('create_shop')
 
 class CreateShopView(View):
     def get(self, request):
@@ -39,10 +28,12 @@ class CreateShopView(View):
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = []
+
     def get(self, request):
-        menu_items = Menu.objects.all()
-        categories = MenuCategory.objects.all()
-        
+        shop = Shop.objects.filter(shopkeeper=request.user).first() 
+        menu_items = Menu.objects.filter(shop=shop) 
+        categories = MenuCategory.objects.filter(shop=shop) 
+
         menu_with_categories = []
         for item in menu_items:
             category_names = [category.name for category in item.menucategory_set.all()]
@@ -50,7 +41,12 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'item': item,
                 'categories': category_names
             })
-        return render(request, 'manage_menu.html', {'menu_with_categories': menu_with_categories, 'categories': categories})
+
+        return render(request, 'manage_menu.html', {
+            'menu_with_categories': menu_with_categories,
+            'categories': categories,
+            'shop_name': shop.name 
+        })
 
 
 class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -58,27 +54,27 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = []
 
     def get(self, request):
+        shop = Shop.objects.filter(shopkeeper=request.user).first() 
         form = MenuForm()
-        categories = MenuCategory.objects.all()
+        categories = MenuCategory.objects.filter(shop=shop)  
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
     def post(self, request):
-        form = MenuForm(request.POST, request.FILES)
+        shop = Shop.objects.filter(shopkeeper=request.user).first() 
+        form = MenuForm(request.POST, request.FILES, shop=shop)  
+
         if form.is_valid():
             menu_item = form.save(commit=False)
-            shop = form.cleaned_data.get('shop')  
-
-            if shop:
-                menu_item.shop_id = shop.id  
+            menu_item.shop = shop 
             menu_item.save()
 
             category_ids = form.cleaned_data.get('categories')
-
             new_category_name = form.cleaned_data.get('new_category')
+
             if new_category_name:
                 new_category, created = MenuCategory.objects.get_or_create(
                     name=new_category_name,
-                    shop_id=shop.id 
+                    shop=shop
                 )
                 if created:
                     category_ids = list(category_ids) if category_ids else []
@@ -89,9 +85,8 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             return redirect('manage_menu')
 
-        categories = MenuCategory.objects.all()
+        categories = MenuCategory.objects.filter(shop=shop)  
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
-
 
 class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
@@ -99,38 +94,34 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         menu_item = Menu.objects.get(pk=pk)
-        form = MenuForm(instance=menu_item)
-        categories = MenuCategory.objects.all()
+        shop = menu_item.shop  
+        form = MenuForm(instance=menu_item, shop=shop) 
+        categories = MenuCategory.objects.filter(shop=shop)  
         selected_categories = menu_item.menucategory_set.all()
         return render(request, 'menu_form.html', {
             'form': form,
             'categories': categories,
-            'selected_categories': selected_categories
+            'selected_categories': selected_categories,
+            'shop_name': shop.name  
         })
 
     def post(self, request, pk):
         menu_item = Menu.objects.get(pk=pk)
-        form = MenuForm(request.POST, request.FILES, instance=menu_item)
+        shop = menu_item.shop 
+        form = MenuForm(request.POST, request.FILES, instance=menu_item, shop=shop) 
+
         if form.is_valid():
             menu_item = form.save(commit=False)
-            shop = form.cleaned_data.get('shop')
-
-            if shop:
-                try:
-                    menu_item.shop_id = shop.id  
-                except ObjectDoesNotExist:
-                    messages.error(request, "ร้านค้านี้ไม่มีอยู่ในระบบ")
-                    return render(request, 'menu_form.html', {'form': form, 'categories': MenuCategory.objects.all()})
-            
+            menu_item.shop = shop
             menu_item.save()
 
             category_ids = form.cleaned_data.get('categories')
-
             new_category_name = form.cleaned_data.get('new_category')
+
             if new_category_name:
                 new_category, created = MenuCategory.objects.get_or_create(
                     name=new_category_name,
-                    shop_id=shop.id  
+                    shop=shop
                 )
                 if created:
                     category_ids = list(category_ids) if category_ids else []
@@ -141,8 +132,9 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             return redirect('manage_menu')
 
-        categories = MenuCategory.objects.all()
+        categories = MenuCategory.objects.filter(shop=shop) 
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
+
 
 class MenuDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'

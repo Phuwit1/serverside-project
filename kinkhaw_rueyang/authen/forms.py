@@ -1,8 +1,11 @@
+from django import forms 
+from .models import UserProfile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
-class CustomUserCreationForm(UserCreationForm):
+
+class RegisterForm(UserCreationForm):
     USER_TYPE_CHOICES = (
         ('Customer', 'Customer'),
         ('Shop', 'Shop'),

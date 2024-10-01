@@ -7,14 +7,15 @@ class UserProfile(models.Model):
         ("F", "Female"),
         ("O", "Other"),
     )
-    image = models.ImageField()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    birth_date = models.DateField()
-    phone_number = models.CharField(max_length=10)
-    email = models.EmailField()
-    sex = models.CharField(choices=SEX_CHOICE)
-    address = models.TextField()
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    sex = models.CharField(max_length=1, choices=SEX_CHOICE)
+    address = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='userimage/', null=True, blank=True)
+
     def __str__(self):
         return self.user.username

@@ -1,4 +1,3 @@
-# forms.py
 from django import forms
 from shop.models import *
 from django.forms import ModelForm
@@ -7,31 +6,28 @@ from django.contrib.auth import authenticate
 
 
 class MenuForm(forms.ModelForm):
-    
     new_category = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         label="Add New Category"
     )
-    
+
     categories = forms.ModelMultipleChoiceField(
-        queryset=MenuCategory.objects.all(),
+        queryset=MenuCategory.objects.none(),  
         widget=forms.CheckboxSelectMultiple,
         required=False,
         label="Categories"
     )
-    
-    # shop = forms.ModelChoiceField(
-    #     queryset=Shop.objects.all(),
-    #     required=True,
-    #     label="เลือกร้านค้า"
-    # )  เปลี่ยนเป็นแสดงชื่อร้านที่เราloginเข้ามา
-
-    
 
     class Meta:
         model = Menu
-        fields = ['name', 'price', 'description', 'image', 'categories', 'new_category', 'shop']
+        fields = ['name', 'price', 'description', 'image', 'categories', 'new_category']
+
+    def __init__(self, *args, **kwargs):
+        shop = kwargs.pop('shop', None)  
+        super(MenuForm, self).__init__(*args, **kwargs)
+        if shop:
+            self.fields['categories'].queryset = MenuCategory.objects.filter(shop=shop)  
 
 
 class ShopForm(forms.ModelForm):
