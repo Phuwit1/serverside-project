@@ -4,6 +4,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 class RegisterForm(UserCreationForm):
     USER_TYPE_CHOICES = (
@@ -29,3 +31,12 @@ class UserProfileForm(forms.ModelForm):
             'sex',
             'address',
         ]
+        widgets = {
+            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        bd = cleaned_data.get('birth_date')
+        if bd > timezone.now().date():
+            raise ValidationError("ห้ามเป็นวันในอนาคต")

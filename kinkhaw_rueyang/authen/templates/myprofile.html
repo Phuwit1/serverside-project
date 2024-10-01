@@ -6,7 +6,11 @@
     <title>My Profile</title>
 </head>
 <body>
-    {% csrf_token %}
-    {{form.as_p}}
+    {% include 'nav.html' %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Save</button>
+    </form>
 </body>
 </html>

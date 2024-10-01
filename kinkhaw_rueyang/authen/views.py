@@ -10,6 +10,9 @@ from django.contrib.auth.models import Group
 from .forms import UserProfileForm,RegisterForm
 from .models import UserProfile
 from shop.views import Shop
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()  
@@ -21,6 +24,7 @@ class RegisterView(View):
             user = form.save()
 
             user_type = form.cleaned_data.get('user_type')
+            UserProfile.objects.create(user=user)
             if user_type == 'Customer':
                 group = Group.objects.get(name="Customer")
             else:
@@ -64,12 +68,24 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = []
     def get(self, request):
-        use = request.user
-        user = UserProfile.objects.get(user=use)
-        form = UserProfileForm(instance=user)
+        try:
+            use = request.user
+            user = UserProfile.objects.get(user=use)
+            form = UserProfileForm(instance=user)
+        except ObjectDoesNotExist:
+            return HttpResponse("<h1 style='font-size:100px'>ไม่พบUser Profileนี้ 🤨</h1>")
         return render(request, "myprofile.html", {
             'form': form,
             'user': user,
+        })
+    def post(self, request):
+        user = UserProfile.objects.get(user__id=request.user.id)
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user.save()
+            return redirect('myprofile')
+        return render(request, 'myprofile.html', {
+            "form": form,
         })
 
 class ShopRedirectView(LoginRequiredMixin, View):
