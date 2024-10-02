@@ -15,7 +15,6 @@ class UserProfile(models.Model):
     email = models.EmailField(null=True, blank=True)
     sex = models.CharField(max_length=1, choices=SEX_CHOICE)
     address = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='userimage/', null=True, blank=True)
 
     def __str__(self):
         return self.user.username
