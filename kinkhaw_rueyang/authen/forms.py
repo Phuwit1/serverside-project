@@ -22,7 +22,6 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            'image',
             'first_name',
             'last_name',
             'birth_date',
@@ -38,5 +37,11 @@ class UserProfileForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         bd = cleaned_data.get('birth_date')
+        phone = cleaned_data.get('phone_number')
         if bd > timezone.now().date():
             raise ValidationError("ห้ามเป็นวันในอนาคต")
+        if phone.isdigit() == False:
+            raise ValidationError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น")
+        elif len(phone) != 10:
+            raise ValidationError("เบอร์โทรศัพท์มือถือต้องมี10ตัวอักษร")
+        
