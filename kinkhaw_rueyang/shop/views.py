@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import *
-
+from order.models import *
 
 class CreateShopView(View):
     def get(self, request):
@@ -22,7 +22,7 @@ class CreateShopView(View):
             shop = form.save(commit=False)
             shop.shopkeeper = request.user
             shop.save()
-            return redirect('manage_menu')  
+            return redirect('shop')  
         return render(request, 'create_shop.html', {'form': form})
 
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -55,7 +55,7 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
-        form = MenuForm()
+        form = MenuForm(shop=shop)
         categories = MenuCategory.objects.filter(shop=shop)  
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
@@ -83,7 +83,7 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
             if category_ids:
                 menu_item.menucategory_set.set(category_ids)
 
-            return redirect('manage_menu')
+            return redirect('shop')
 
         categories = MenuCategory.objects.filter(shop=shop)  
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
@@ -130,7 +130,7 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
             if category_ids:
                 menu_item.menucategory_set.set(category_ids)
 
-            return redirect('manage_menu')
+            return redirect('shop')
 
         categories = MenuCategory.objects.filter(shop=shop) 
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
@@ -147,7 +147,32 @@ class MenuDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
         try:
             with transaction.atomic():
                 menu_item.delete()
-            return redirect('manage_menu')
+            return redirect('shop')
         except Exception as e:
             menu_items = Menu.objects.all()
             return render(request, 'manage_menu.html', {'menu_items': menu_items, 'error': str(e)})
+
+class ShopOrderView(LoginRequiredMixin,PermissionRequiredMixin,View):
+    login_url = '/authen/'
+    permission_required = []
+    
+    def get(self, request):
+        user= request.user
+        shop=Shop.objects.get(shopkeeper=user)
+        orders=Order.objects.filter(shop=shop).order_by('-order_date')
+        
+        return render(request, "manage_order.html", {
+            "orders": orders,
+        })
+    
+    def post(self, request):
+        order_id = request.POST.get('orderid')
+        new_status = request.POST.get('new_status')
+        
+        if new_status in dict(Order.Status.choices).keys():
+            order = Order.objects.get(id=order_id)
+            order.order_status = new_status
+            order.save()
+            messages.success(request, f"อัปเดตสถานะเป็น {new_status} สำเร็จ")
+            
+        return redirect('shop')

@@ -96,7 +96,7 @@ class ShopRedirectView(LoginRequiredMixin, View):
         if user.groups.filter(name='Shop').exists():
             
             if Shop.objects.filter(shopkeeper=user).exists():
-                return redirect('manage_menu') 
+                return redirect('shop') 
             else:
                 return redirect('create_shop')  
         else:

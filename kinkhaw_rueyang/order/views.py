@@ -137,3 +137,27 @@ class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "order": query,
             "order_item": query2,
         })
+# class ShopOrderView(LoginRequiredMixin,PermissionRequiredMixin,View):
+#     login_url = '/authen/'
+#     permission_required = []
+    
+#     def get(self, request):
+#         user= request.user
+#         shop=Shop.objects.get(shopkeeper=user)
+#         orders=Order.objects.filter(shop=shop).order_by('-order_date')
+        
+#         return render(request, "manage_order.html", {
+#             "orders": orders,
+#         })
+    
+#     def post(self, request):
+#         order_id = request.POST.get('orderid')
+#         new_status = request.POST.get('new_status')
+        
+#         if new_status in dict(Order.Status.choices).keys():
+#             order = Order.objects.get(id=order_id)
+#             order.order_status = new_status
+#             order.save()
+#             messages.success(request, f"อัปเดตสถานะเป็น {new_status} สำเร็จ")
+            
+#         return redirect('shop')

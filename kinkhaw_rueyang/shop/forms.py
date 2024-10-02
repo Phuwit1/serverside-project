@@ -23,7 +23,8 @@ class MenuForm(forms.ModelForm):
         model = Menu
         fields = ['name', 'price', 'description', 'image', 'categories', 'new_category']
 
-    def __init__(self, shop=None, *args, **kwargs): #โชว์แค่categoryของร้านนั้นๆ
+    def __init__(self, *args, **kwargs): 
+        shop = kwargs.pop('shop', None)
         super(MenuForm, self).__init__(*args, **kwargs)
         if shop:
             self.fields['categories'].queryset = MenuCategory.objects.filter(shop=shop)  
