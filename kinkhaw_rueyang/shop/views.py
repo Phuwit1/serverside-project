@@ -166,21 +166,26 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
             try:
                 user_profile = order.customer.userprofile
                 order.customer_full_name = f"{user_profile.first_name} {user_profile.last_name}"
-                order.customer_phone = order.customer.userprofile.phone_number
+                order.customer_phone = user_profile.phone_number
             except UserProfile.DoesNotExist:
                 order.customer_full_name = "Unknown"
-                order.customer_phone = None  
+                order.customer_phone = None
 
         return render(request, "manage_order.html", {
             "orders": orders,
         })
-
     def post(self, request):
         order_id = request.POST.get('orderid')
-        new_status = request.POST.get('new_status')
+        action = request.POST.get('action')
 
-        if new_status in dict(Order.Status.choices).keys():
+        if action == 'cancel':
             order = Order.objects.get(id=order_id)
-            order.order_status = new_status
-            order.save()
-        return redirect('shop')
+            order.delete()
+            return redirect('shop')
+        elif action == 'status':
+            new_status = request.POST.get('new_status')
+            if new_status in dict(Order.Status.choices).keys():
+                order = Order.objects.get(id=order_id)
+                order.order_status = new_status
+                order.save()
+            return redirect('shop')
