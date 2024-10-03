@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage All Shop</title>
+</head>
+<body>
+    {% if shop %}
+        {% for i in shop %}
+        <form method="post">
+            {% csrf_token %}
+            {{i.name}}
+            <a href="{% url "seeshopdetail" i.id %}">
+                click me!
+            </a>
+            <button type="submit">delete</button>
+        <form>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
