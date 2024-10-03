@@ -4,11 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    {% if shop %}
-        {{shop.id}}
-        {{shop.name}}
-    {% endif %}
+    <div class="container mt-5">
+        <h1 class="text-center">Shop Details</h1>
+        
+        {% if shop %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Shop Name:</strong> {{ shop.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">ID: {{ shop.id }}</h6>
+                    <p class="card-text"><strong>Description:</strong> {{ shop.description }}</p>
+                    <p class="card-text"><strong>Phone Number:</strong> {{ shop.phone_number }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ shop.address }}</p>
+                    
+                    <h5 class="mt-4">Shopkeeper Information</h5>
+                    <p class="card-text"><strong>First Name:</strong> {{ shop.shopkeeper.userprofile.first_name }}</p>
+                    <p class="card-text"><strong>Last Name:</strong> {{ shop.shopkeeper.userprofile.last_name }}</p>
+                    <p class="card-text"><strong>Phone Number:</strong> {{ shop.shopkeeper.userprofile.phone_number }}</p>
+                    <p class="card-text"><strong>Email:</strong> {{ shop.shopkeeper.userprofile.email }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ shop.shopkeeper.userprofile.address }}</p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">ไม่มีข้อมูลร้านค้าในขณะนี้</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
