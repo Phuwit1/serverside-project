@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.views import View
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .forms import UserProfileForm
 from django.contrib.auth.models import Group
@@ -12,6 +12,7 @@ from .models import UserProfile
 from shop.views import Shop
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.contrib.auth import update_session_auth_hash
 
 class RegisterView(View):
     def get(self, request):
@@ -57,6 +58,21 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
+    
+class ShopRedirectView(LoginRequiredMixin, View):
+    login_url = '/authen/'
+
+    def get(self, request):
+        user = request.user
+        if user.groups.filter(name='Shop').exists():
+            
+            if Shop.objects.filter(shopkeeper=user).exists():
+                return redirect('shop') 
+            else:
+                return redirect('create_shop')  
+        else:
+            return redirect('base')  
+
 
 class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
@@ -88,16 +104,22 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "form": form,
         })
 
-class ShopRedirectView(LoginRequiredMixin, View):
+class ChangePasswordView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-
+    permission_required = []
+    
     def get(self, request):
-        user = request.user
-        if user.groups.filter(name='Shop').exists():
-            
-            if Shop.objects.filter(shopkeeper=user).exists():
-                return redirect('shop') 
-            else:
-                return redirect('create_shop')  
-        else:
-            return redirect('base')  
+        form = PasswordChangeForm(request.user)
+        # form = UserChangePassword(request.user)
+        return render(request, 'changepass.html', {
+            'form': form
+        })
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('myprofile')
+        return render(request, 'changepass.html', {
+            'form': form
+        })

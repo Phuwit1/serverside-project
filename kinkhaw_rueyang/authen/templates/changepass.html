@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% include 'nav.html' %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Confirm</button>
+        <a href={% url 'myprofile' %}>
+            <input type="button" value="Cancel">
+        </a>
+    </form>
+    
+</body>
+</html>

@@ -4,13 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     {% include 'nav.html' %}
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Save</button>
-    </form>
+    <div class="container mt-5">
+        <h2>My Profile</h2>
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger errorlist nonfield">
+                <strong>There were some errors:</strong>
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <div class="form-group col-md-6">
+                    <label>First Name</label>
+                    {{form.first_name}}
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Last Name</label>
+                    {{form.last_name}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Birth Date</label>
+                    {{form.birth_date}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Phone Number</label>
+                    {{form.phone_number}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>First Name</label>
+                    {{form.first_name}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Email</label>
+                    {{form.email}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Sex</label>
+                    {{form.sex}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Address</label>
+                    {{form.address}}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Save</button>
+        </form>
+        <a href="{% url 'changepass' %}" class="btn btn-secondary">
+            Change Password
+        </a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
