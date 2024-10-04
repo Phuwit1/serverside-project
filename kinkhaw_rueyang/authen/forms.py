@@ -37,8 +37,19 @@ class UserProfileForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
         bd = cleaned_data.get('birth_date')
         phone = cleaned_data.get('phone_number')
+        email = cleaned_data.get('email')
+        if first_name == None:
+            raise ValidationError("ชื่อห้ามเว้นว่าง")
+        if last_name == None:
+            raise ValidationError("นามสกุลห้ามเว้นว่าง")
+        if phone == None:
+            raise ValidationError("เบอร์โทรศัพท์ห้ามเว้นว่าง")
+        if email == None:
+            raise ValidationError("อีเมลห้ามเว้นว่าง")
         if bd > timezone.now().date():
             raise ValidationError("ห้ามเป็นวันในอนาคต")
         if phone.isdigit() == False:
