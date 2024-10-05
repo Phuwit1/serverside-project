@@ -161,6 +161,8 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         user = request.user
         shop = Shop.objects.get(shopkeeper=user)
         orders = Order.objects.filter(shop=shop).order_by('-order_date').select_related('customer')
+        order_count = Order.objects.filter(shop=shop).values('order_status').annotate(count=Count('order_status'))
+        
 
         for order in orders:
             try:
@@ -173,6 +175,7 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, "manage_order.html", {
             "orders": orders,
+            "order_count": order_count,
         })
     def post(self, request):
         order_id = request.POST.get('orderid')
