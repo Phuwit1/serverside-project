@@ -51,8 +51,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% if user %}
-                    {% for i in user %}
+                {% if users %}
+                    {% for i in users %}
                         <tr>
                             <td>{{i.username}}</td>
                             <td>{{i.userprofile.first_name}} {{i.userprofile.last_name}}</td>

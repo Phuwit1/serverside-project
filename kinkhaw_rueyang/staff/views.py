@@ -45,7 +45,7 @@ class AllUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
         for i in query:
             i.group = [j.name for j in i.groups.all()]
         return render(request, "manage_all_user.html", {
-            "user": query
+            "users": query
         })
 
 
@@ -66,13 +66,13 @@ class ShopGroupView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
     permission_required = ['auth.change_group']
     def post(self, request):
-        user = User.objects.get(id=request.POST.get('use'))
-        groups = [i for i in user.groups.all()]
+        users = User.objects.get(id=request.POST.get('use'))
+        groups = [i for i in users.groups.all()]
         group = Group.objects.get(name="Shop")
         if group in groups:
-            user.groups.remove(group)
+            users.groups.remove(group)
         else:
-            user.groups.add(group)
+            users.groups.add(group)
         return redirect("managealluser")
 
 class SearchUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -84,5 +84,5 @@ class SearchUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
         for i in query:
             i.group = [j.name for j in i.groups.all()]
         return render(request, "manage_all_user.html", {
-            "user": query
+            "users": query
         })

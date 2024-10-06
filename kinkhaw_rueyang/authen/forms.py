@@ -46,6 +46,8 @@ class UserProfileForm(forms.ModelForm):
             raise ValidationError("ชื่อห้ามเว้นว่าง")
         if last_name == None:
             raise ValidationError("นามสกุลห้ามเว้นว่าง")
+        if bd == None:
+            raise ValidationError("วันเกิดห้ามเว้นว่าง")
         if phone == None:
             raise ValidationError("เบอร์โทรศัพท์ห้ามเว้นว่าง")
         if email == None:

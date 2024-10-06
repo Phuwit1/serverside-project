@@ -34,7 +34,7 @@ class RegisterView(View):
             group.user_set.add(user)
 
             login(request, user)
-            return redirect('login')
+            return redirect('myprofile')
         return render(request, 'register.html', {'form': form})
     
 class LoginView(View):
