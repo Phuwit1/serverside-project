@@ -13,7 +13,7 @@ from cart.models import Cart, CartItem
 
 class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_shop']
     def get(self, request):
         queries = Shop.objects.all()
         for query in queries:
@@ -24,7 +24,7 @@ class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SelectMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_menu', 'shop.view_menucategory']
     def get(self, request, shop_id, category_id):
         try:
             if category_id == 0:
@@ -45,7 +45,7 @@ class SelectMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ["shop.view_menu", "cart.add_cart", "cart.add_cartitem", 'shop.view_menucategory']
     def get(self, request, menu_id, shop_id):
         try:
             query = Menu.objects.get(id=menu_id, shop__id=shop_id)
@@ -83,7 +83,7 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SelectMenuSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_menu', 'shop.view_menucategory']
     def post(self, request, shop_id):
         try:
             search = request.POST.get('search')
@@ -100,7 +100,7 @@ class SelectMenuSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['order.view_order', 'order.delete_order']
     def get(self, request, status):
         user = request.user
         if status == 'pending': 
@@ -128,7 +128,7 @@ class OrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['order.view_order', 'order.view_orderitem']
     def get(self, request, order_id):
         user = request.user
         query = Order.objects.get(id=order_id)

@@ -82,7 +82,7 @@ class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['authen.view_userprofile', 'authen.change_userprofile']
     def get(self, request):
         try:
             use = request.user
@@ -106,7 +106,7 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class ChangePasswordView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['authen.change_userprofile']
     
     def get(self, request):
         form = PasswordChangeForm(request.user)

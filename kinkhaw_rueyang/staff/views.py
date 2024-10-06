@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 # Create your views here.
 class AllShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_shop', 'shop.delete_shop']
     def get(self, request):
         query = Shop.objects.all()
         return render(request, "manage_all_shop.html", {
@@ -21,7 +21,7 @@ class AllShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_shop', 'shop.delete_shop']
     def get(self, request, shop_id):
         query = Shop.objects.get(id=shop_id)
         return render(request, "see_shop_detail.html", {
@@ -30,7 +30,7 @@ class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SearchShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_shop', 'shop.delete_shop']
     def post(self, request):
         query = Shop.objects.filter(name__icontains=request.POST.get('search'))
         return render(request, "manage_all_shop.html", {
@@ -39,7 +39,7 @@ class SearchShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class AllUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['auth.view_user', 'auth.change_user']
     def get(self, request):
         query = User.objects.filter(is_staff=False)
         for i in query:
@@ -51,7 +51,7 @@ class AllUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class CustomerGroupView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['auth.change_group']
     def post(self, request):
         user = User.objects.get(id=request.POST.get('use'))
         groups = [i for i in user.groups.all()]
@@ -64,7 +64,7 @@ class CustomerGroupView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class ShopGroupView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['auth.change_group']
     def post(self, request):
         user = User.objects.get(id=request.POST.get('use'))
         groups = [i for i in user.groups.all()]
@@ -77,7 +77,7 @@ class ShopGroupView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SearchUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['auth.view_user', 'auth.change_user']
     def post(self, request):
         search = request.POST.get('search')
         query = User.objects.filter(username__icontains=search, is_staff=False)

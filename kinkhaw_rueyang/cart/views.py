@@ -12,7 +12,7 @@ from order.models import Order, OrderItem
 # Create your views here.
 class CartView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['cart.view_cart', 'cart.delete_cart']
     def get(self, request):
         try:
             cus = request.user
@@ -37,7 +37,7 @@ class CartView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class DeleteCartView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['cart.view_cart', 'cart.delete_cart']
     @transaction.atomic
     def post(self, request, item_id):
         cus = request.user
@@ -51,7 +51,7 @@ class DeleteCartView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class CartItemView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['cart.view_cartitem', 'cart.delete_cartitem', 'cart.change_cartitem']
     def get(self, request, item_id):
         cus = request.user
         cartitem = CartItem.objects.get(cart__customer__id=cus.id, id=item_id)
