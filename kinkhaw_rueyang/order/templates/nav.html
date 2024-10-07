@@ -21,15 +21,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'selectshop' %}">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customercart' %}">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vieworder' 'pending' %}">My Order</a>
-                </li>
+                {% for i in user.groups.all %}
+                    {% if i.name == "Customer" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'selectshop' %}">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'customercart' %}">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vieworder' 'pending' %}">My Order</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
                 {% if user.is_staff %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'manageallshop'%}">Shop</a>
