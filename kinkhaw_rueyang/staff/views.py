@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 # Create your views here.
 class AllShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = ['shop.view_shop', 'shop.delete_shop']
+    permission_required = ['shop.delete_shop']
     def get(self, request):
         query = Shop.objects.all()
         return render(request, "manage_all_shop.html", {
@@ -21,7 +21,7 @@ class AllShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = ['shop.view_shop', 'shop.delete_shop']
+    permission_required = ['shop.delete_shop']
     def get(self, request, shop_id):
         query = Shop.objects.get(id=shop_id)
         return render(request, "see_shop_detail.html", {
@@ -30,7 +30,7 @@ class SelectShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class SearchShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = ['shop.view_shop', 'shop.delete_shop']
+    permission_required = ['shop.delete_shop']
     def post(self, request):
         query = Shop.objects.filter(name__icontains=request.POST.get('search'))
         return render(request, "manage_all_shop.html", {
