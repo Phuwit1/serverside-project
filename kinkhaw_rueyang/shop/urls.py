@@ -8,5 +8,6 @@ urlpatterns = [
     path('managemenu/delete/<int:pk>/', views.MenuDeleteView.as_view(), name='menu_delete'),
     path('shop/create/', views.CreateShopView.as_view(), name='create_shop'), 
     path("manage-orders/", views.ShopOrderView.as_view(), name="manage_order"),
+    path("daily-summary/", views.DailySummaryView.as_view(), name="daily_summary"),
 ]
 

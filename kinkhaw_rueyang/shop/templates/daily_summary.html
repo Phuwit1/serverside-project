@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Summary</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>สรุปยอดขายรายวัน</h2>
+        
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <label for="selected_date">เลือกวันที่:</label>
+            <input type="date" id="selected_date" name="selected_date" class="form-control" required>
+            <button type="submit" class="btn btn-primary mt-2">ดูรายงาน</button>
+        </form>
+
+        {% if menu_summary %}
+            <h3>สรุปยอดขายสำหรับวันที่ {{ selected_date }}</h3>
+            <table class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th>เมนู</th>
+                      <th>จำนวนครั้งที่สั่ง</th>
+                      <th>ยอดรวม (บาท)</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in menu_summary %}
+                  <tr>
+                      <td>{{ item.menu__name }}</td>
+                      <td>{{ item.total_orders }}</td>
+                      <td>{{ item.total_amount }}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>          
+        {% else %}
+            <p>ไม่มีข้อมูลการสั่งซื้อสำหรับวันที่เลือก</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -11,6 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .forms import *
 from authen.models import *
 from order.models import *
+from datetime import datetime
+
 
 class CreateShopView(View):
     def get(self, request):
@@ -192,3 +194,23 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 order.order_status = new_status
                 order.save()
             return redirect('shop')
+
+class DailySummaryView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, "daily_summary.html")
+    
+    def post(self, request):
+        selected_date_str = request.POST.get('selected_date')
+        selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+
+        shop = Shop.objects.get(shopkeeper=request.user)
+
+        menu_summary = OrderItem.objects.filter(order__shop=shop, order__order_date=selected_date).values('menu__name').annotate(
+            total_orders=Count('menu'),
+            total_amount=Sum('price')
+        )
+
+        return render(request, "daily_summary.html", {
+            "menu_summary": menu_summary,
+            "selected_date": selected_date,
+        })
