@@ -187,14 +187,14 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if action == 'cancel':
             order = Order.objects.get(id=order_id)
             order.delete()
-            return redirect('shop')
+            return redirect('manage_order')
         elif action == 'status':
             new_status = request.POST.get('new_status')
             if new_status in dict(Order.Status.choices).keys():
                 order = Order.objects.get(id=order_id)
                 order.order_status = new_status
                 order.save()
-            return redirect('shop')
+            return redirect('manage_order')
 
 class DailySummaryView(LoginRequiredMixin, View):
     def get(self, request):
