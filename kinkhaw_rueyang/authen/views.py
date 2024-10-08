@@ -86,13 +86,13 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         try:
             use = request.user
-            user = UserProfile.objects.get(user=use)
-            form = UserProfileForm(instance=user)
+            users = UserProfile.objects.get(user=use)
+            form = UserProfileForm(instance=users)
         except ObjectDoesNotExist:
             return HttpResponse("<h1 style='font-size:100px'>ไม่พบUser Profileนี้ 🤨</h1>")
         return render(request, "myprofile.html", {
             'form': form,
-            'user': user,
+            'users': users,
         })
     def post(self, request):
         user = UserProfile.objects.get(user__id=request.user.id)
