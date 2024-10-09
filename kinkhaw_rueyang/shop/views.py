@@ -29,7 +29,7 @@ class CreateShopView(View):
 
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = ['shop.view_menu','shop.delete_menu']
+    permission_required = ['shop.view_menu','shop.delete_menu','shop.change_menu']
 
     def get(self, request):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
