@@ -1,13 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Base</title>
 </head>
+
 <body>
-    <a href="{% url 'selectshop' %}">Customer</a>
-    <a href="{% url 'shop_redirect' %}">Shopkeeper</a>
-    <a href="{% url 'manageallshop' %}">Staff</a>
+    
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base</title>
+</head>
+
+<body>
+    
+    {% if is_staff %}
+        <a href="{% url 'manageallshop' %}">Staff</a>
+    {% else %}
+        {% if is_customer %}
+            <a href="{% url 'selectshop' %}">Customer</a>
+        {% endif %}
+        {% if is_shop %}
+            <a href="{% url 'shop_redirect' %}">Shopkeeper</a>
+        {% endif %}
+    {% endif %} 
+
 </body>
+
 </html>
+
+  
+    
+</body>
+
+</html>
+
+
+<!-- <a href="{% url 'selectshop' %}">Customer</a>
+    <a href="{% url 'shop_redirect' %}">Shopkeeper</a>
+    <a href="{% url 'manageallshop' %}">Staff</a> -->

@@ -74,11 +74,21 @@ class ShopRedirectView(LoginRequiredMixin, View):
             return redirect('base')  
 
 
-class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class BaseView(LoginRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+
     def get(self, request):
-        return render(request, 'base.html')
+        is_customer = request.user.groups.filter(name='Customer').exists()
+        is_shop = request.user.groups.filter(name='Shop').exists()
+        is_staff = request.user.groups.filter(name='Staff').exists()  
+
+        context = {
+            'user': request.user,
+            'is_customer': is_customer,
+            'is_shop': is_shop,
+            'is_staff': is_staff,
+        }
+        return render(request, 'base.html', context)
 
 class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
