@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views import View
 from .models import *
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import F, Q, Count, Sum
@@ -12,7 +11,6 @@ from .forms import *
 from authen.models import *
 from order.models import *
 from datetime import datetime
-from django.core.paginator import Paginator
 
 
 class CreateShopView(View):
@@ -55,7 +53,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.add_menu']
 
     def get(self, request):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
