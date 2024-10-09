@@ -29,7 +29,7 @@ class CreateShopView(View):
 
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.view_menu','shop.delete_menu']
 
     def get(self, request):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
@@ -53,7 +53,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = ['shop.add_menu']
+    permission_required = ['shop.add_menu','shop.add_menucategory']
 
     def get(self, request):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
@@ -92,7 +92,7 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['shop.change_menu','shop.add_menucategory','shop.change_menucategory']
 
     def get(self, request, pk):
         menu_item = Menu.objects.get(pk=pk)
@@ -138,9 +138,9 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
 
-class MenuDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class MenuDeleteView(LoginRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    
     def post(self, request, pk):
         menu_item = Menu.objects.filter(pk=pk).first()
         if menu_item is None:
@@ -156,7 +156,7 @@ class MenuDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
-    permission_required = []
+    permission_required = ['order.view_order']
 
     def get(self, request):
         user = request.user
