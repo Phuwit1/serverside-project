@@ -10,7 +10,7 @@
 <body>
     {% include "nav.html" %}
     <div class="container mt-5">
-        <h1 class="text-center">Manage All Shops</h1>
+        <h1 class="text-center mb-4">Manage All Shops</h1>
         
         <form method="post" action="{% url 'searchshop' %}" class="mb-4">
             {% csrf_token %}
