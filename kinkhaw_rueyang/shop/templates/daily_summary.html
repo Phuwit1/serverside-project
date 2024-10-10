@@ -7,7 +7,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  {% include 'nav.html' %}
+    {% include 'nav.html' %}
     <div class="container mt-5">
         <h2>สรุปยอดขายรายวัน</h2>
         
@@ -21,23 +21,24 @@
         {% if menu_summary %}
             <h3>สรุปยอดขายสำหรับวันที่ {{ selected_date }}</h3>
             <table class="table table-bordered">
-              <thead>
-                  <tr>
-                      <th>เมนู</th>
-                      <th>จำนวนครั้งที่สั่ง</th>
-                      <th>ยอดรวม (บาท)</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for item in menu_summary %}
-                  <tr>
-                      <td>{{ item.menu__name }}</td>
-                      <td>{{ item.total_orders }}</td>
-                      <td>{{ item.total_amount }}</td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>          
+                <thead>
+                    <tr>
+                        <th>เมนู</th>
+                        <th>จำนวนครั้งที่สั่ง</th>
+                        <th>ยอดรวม (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in menu_summary %}
+                    <tr>
+                        <td>{{ item.menu__name }}</td>
+                        <td>{{ item.total_orders }}</td>
+                        <td>{{ item.total_amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h4>ยอดเงินรวมทั้งหมด: {{ total_sales }} บาท</h4> 
         {% else %}
             <p>ไม่มีข้อมูลการสั่งซื้อสำหรับวันที่เลือก</p>
         {% endif %}

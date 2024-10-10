@@ -8,5 +8,5 @@ urlpatterns = [
     path('base/', views.BaseView.as_view(), name='base'),
     path('myprofile/', views.MyProfileView.as_view(), name="myprofile"),
     path('myprofile/changepass/', views.ChangePasswordView.as_view(), name="changepass"),
-    path('shop_redirect/', ShopRedirectView.as_view(), name='shop_redirect'),
+    # path('shop_redirect/', ShopRedirectView.as_view(), name='shop_redirect'),
 ]
