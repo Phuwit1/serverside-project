@@ -61,7 +61,7 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, menu_id, shop_id):
         amount = int(request.POST.get('amount', 1))
         cus = request.user.id
-        cart = Cart.objects.filter(customer__id=cus).first() #.first เพราะถ้าไม่มีจะreturn none
+        cart = Cart.objects.filter(customer__id=cus).first()
         if cart is None:
             shops = Shop.objects.get(id=shop_id)
             carts = Cart.objects.create(customer=request.user, shop=shops)
@@ -71,7 +71,14 @@ class SelectMenuOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
             carts = Cart.objects.get(customer__id=cus)
             if carts.shop.id == shop_id:
                 menus = Menu.objects.get(id=menu_id)
-                CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
+                check = CartItem.objects.filter(cart=carts, menu=menus).first()
+                if check != None:
+                    new_amount = check.quantity + amount
+                    check.quantity = new_amount
+                    check.price = check.price + (amount * menus.price)
+                    check.save()
+                else:
+                    CartItem.objects.create(cart=carts, menu=menus, quantity=amount, price=menus.price*amount)
             else:
                 carts.delete()
                 shops = Shop.objects.get(id=shop_id)

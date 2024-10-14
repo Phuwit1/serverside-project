@@ -1,47 +1,50 @@
-<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
+    <title>base</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-
 <body>
-    
-    <!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
-</head>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% if is_staff %}
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fa-solid fa-wrench fa-3x mb-3"></i>
+                        <h5 class="card-title">Staff</h5>
+                        <a href="{% url 'manageallshop' %}" class="btn btn-primary">Manage All Shops</a>
+                    </div>
+                </div>
+            {% else %}
+                {% if is_customer %}
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fa-solid fa-utensils fa-3x mb-3"></i>
+                            <h5 class="card-title">Customer</h5>
+                            <a href="{% url 'selectshop' %}" class="btn btn-success">Select Shop</a>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if is_shop %}
+                    <div class="card text-center mt-3">
+                        <div class="card-body">
+                            <i class="fa-solid fa-shop fa-3x mb-3"></i>
+                            <h5 class="card-title">Shopkeeper</h5>
+                            <a href="{% url 'shop' %}" class="btn btn-warning">Go to Shop</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-<body>
-    
-    {% if is_staff %}
-        <a href="{% url 'manageallshop' %}">Staff</a>
-    {% else %}
-        {% if is_customer %}
-            <a href="{% url 'selectshop' %}">Customer</a>
-        {% endif %}
-        {% if is_shop %}
-            <a href="{% url 'shop_redirect' %}">Shopkeeper</a>
-        {% endif %}
-    {% endif %} 
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
-
-  
-    
-</body>
-
-</html>
-
-
-<!-- <a href="{% url 'selectshop' %}">Customer</a>
-    <a href="{% url 'shop_redirect' %}">Shopkeeper</a>
-    <a href="{% url 'manageallshop' %}">Staff</a> -->

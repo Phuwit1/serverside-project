@@ -59,19 +59,19 @@ class LogoutView(View):
         logout(request)
         return redirect('login')
     
-class ShopRedirectView(LoginRequiredMixin, View):
-    login_url = '/authen/'
+# class ShopRedirectView(LoginRequiredMixin, View):
+#     login_url = '/authen/'
 
-    def get(self, request):
-        user = request.user
-        if user.groups.filter(name='Shop').exists():
+#     def get(self, request):
+#         user = request.user
+#         if user.groups.filter(name='Shop').exists():
             
-            if Shop.objects.filter(shopkeeper=user).exists():
-                return redirect('shop') 
-            else:
-                return redirect('create_shop')  
-        else:
-            return redirect('base')  
+#             if Shop.objects.filter(shopkeeper=user).exists():
+#                 return redirect('shop') 
+#             else:
+#                 return redirect('create_shop')  
+#         else:
+#             return redirect('base')  
 
 
 class BaseView(LoginRequiredMixin, View):

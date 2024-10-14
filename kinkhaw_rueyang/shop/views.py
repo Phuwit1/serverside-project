@@ -35,6 +35,10 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
         shop = Shop.objects.filter(shopkeeper=request.user).first() 
         menu_items = Menu.objects.filter(shop=shop) 
         categories = MenuCategory.objects.filter(shop=shop) 
+        
+        if not shop:
+            return redirect('create_shop')
+        
 
         menu_with_categories = []
         for item in menu_items:
@@ -161,9 +165,8 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         user = request.user
         shop = Shop.objects.get(shopkeeper=user)
-        orders = Order.objects.filter(shop=shop).order_by('-order_date').select_related('customer')
+        orders = Order.objects.filter(shop=shop).order_by('-order_date', '-id').select_related('customer')
         order_count = Order.objects.filter(shop=shop).values('order_status').annotate(count=Count('order_status'))
-        
 
         for order in orders:
             try:
@@ -178,14 +181,19 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "orders": orders,
             "order_count": order_count,
         })
+
     def post(self, request):
         order_id = request.POST.get('orderid')
         action = request.POST.get('action')
 
         if action == 'cancel':
             order = Order.objects.get(id=order_id)
-            order.delete()
+            order.order_status = 'Cancelled'
+            order.save()
+
+            
             return redirect('manage_order')
+
         elif action == 'status':
             new_status = request.POST.get('new_status')
             if new_status in dict(Order.Status.choices).keys():
@@ -204,12 +212,20 @@ class DailySummaryView(LoginRequiredMixin, View):
 
         shop = Shop.objects.get(shopkeeper=request.user)
 
-        menu_summary = OrderItem.objects.filter(order__shop=shop, order__order_date=selected_date).values('menu__name').annotate(
-            total_orders=Count('menu'),
+        menu_summary = OrderItem.objects.filter(
+            order__shop=shop, 
+            order__order_date=selected_date
+        ).exclude(order__order_status='Cancelled').values(
+            'menu__name'
+        ).annotate(
+            total_orders=Count('menu'), 
             total_amount=Sum('price')
         )
+
+        total_sales = sum(item['total_amount'] for item in menu_summary)
 
         return render(request, "daily_summary.html", {
             "menu_summary": menu_summary,
             "selected_date": selected_date,
+            "total_sales": total_sales,
         })
