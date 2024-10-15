@@ -21,11 +21,11 @@ class CreateShopView(View):
     def post(self, request):
         shop_form = ShopForm(request.POST)
         if shop_form.is_valid():
-            new_shop = shop_form.save(commit=False)
-            new_shop.shopkeeper = request.user
+            new_shop = shop_form.save(commit=False) #create oj ยังไม่ลง DB
+            new_shop.shopkeeper = request.user #ให้คนที่login เป็นเจ้าของร้าน
             new_shop.save()
             return redirect('shop')
-        return render(request, 'create_shop.html', {'form': shop_form})
+        return render(request, 'create_shop.html', {'form': shop_form}) 
 
 
 class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -33,7 +33,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ['shop.view_menu', 'shop.delete_menu', 'shop.change_menu']
 
     def get(self, request):
-        user_shop = Shop.objects.filter(shopkeeper=request.user).first()
+        user_shop = Shop.objects.filter(shopkeeper=request.user).first()  #ถ้าลบ .first ออกตอนเช็คต้องใช้ .exists
         if not user_shop:
             return redirect('create_shop')
 
@@ -43,7 +43,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
         menu_data = [
             {
                 'item': menu,
-                'categories': [cat.name for cat in menu.menucategory_set.all()]
+                'categories': [cat.name for cat in menu.menucategory_set.all()] #ชื่อ cat ของเมนู
             }
             for menu in menus
         ]

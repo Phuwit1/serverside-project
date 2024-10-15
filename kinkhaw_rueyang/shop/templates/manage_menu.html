@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,8 +11,8 @@
 <body>
     {% include 'nav.html' %}
 
-    <h1 style="text-align: center;">{{ shop_name }}</h1>  <!-- แสดงชื่อร้านที่ล็อกอินเข้ามา -->
-
+    <h1 style="text-align: center;">{{ shop_name }}</h1> <!-- โชว์ชื่อร้านที่ล็อกอินเข้ามา -->
+    
     {% if error %}
     <div class="error-message">{{ error }}</div>
     {% endif %}
@@ -39,10 +38,10 @@
                 <td>{{ menu_data.item.description }}</td>
                 <td>
                     {% if menu_data.item.image %}
-                        <img src="{{ menu_data.item.image.url }}" alt="{{ menu_data.item.name }}"
-                             style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                    <img src="{{ menu_data.item.image.url }}" alt="{{ menu_data.item.name }}"
+                        style="max-width: 100px; max-height: 100px; object-fit: cover;">
                     {% else %}
-                        <span style="color: gray;">No Image Available</span>
+                    <span style="color: gray;">No Image Available</span>
                     {% endif %}
                 </td>
                 <td>

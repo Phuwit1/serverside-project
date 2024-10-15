@@ -36,8 +36,26 @@ class ShopForm(forms.ModelForm):
             'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'ที่อยู่'}),
         }
 
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name:
+            raise forms.ValidationError("กรุณากรอกชื่อร้าน")
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data.get('description')
+        if not description:
+            raise forms.ValidationError("กรุณากรอกคำอธิบายร้าน")
+        return description
+
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
         if not phone_number.isdigit() or len(phone_number) != 10:
             raise forms.ValidationError("หมายเลขโทรศัพท์ต้องเป็นตัวเลข 10 หลัก")
         return phone_number
+
+    def clean_address(self):
+        address = self.cleaned_data.get('address')
+        if not address:
+            raise forms.ValidationError("กรุณากรอกที่อยู่")
+        return address

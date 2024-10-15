@@ -23,10 +23,9 @@ class RegisterView(View):
         form = RegisterForm(request.POST)  
         if form.is_valid():
             user = form.save()
-
-            user_type = form.cleaned_data.get('user_type')
+            select_type = form.cleaned_data.get('user_type') #เอาจากform
             UserProfile.objects.create(user=user)
-            if user_type == 'Customer':
+            if select_type == 'Customer':
                 group = Group.objects.get(name="Customer")
             else:
                 group = Group.objects.get(name="Shop")
@@ -59,19 +58,6 @@ class LogoutView(View):
         logout(request)
         return redirect('login')
     
-# class ShopRedirectView(LoginRequiredMixin, View):
-#     login_url = '/authen/'
-
-#     def get(self, request):
-#         user = request.user
-#         if user.groups.filter(name='Shop').exists():
-            
-#             if Shop.objects.filter(shopkeeper=user).exists():
-#                 return redirect('shop') 
-#             else:
-#                 return redirect('create_shop')  
-#         else:
-#             return redirect('base')  
 
 
 class BaseView(LoginRequiredMixin, View):
