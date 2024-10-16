@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.views import View
 from shop.models import Shop
+from order.models import Order
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # Create your views here.
@@ -16,6 +17,10 @@ class AllShopView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request):
         shop_id = request.POST.get('shopid')
         shop = Shop.objects.get(id=shop_id)
+        order = Order.objects.filter(shop=shop, order_status__in=["Order", "Cooking"])
+        for i in order:
+            i.order_status = "Cancelled"
+            i.save()
         shop.delete()
         return redirect('manageallshop')
 
