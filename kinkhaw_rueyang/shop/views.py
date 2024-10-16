@@ -54,6 +54,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'shop_name': user_shop.name,
         })
 
+#กันลืม login -> django กำหนด request.user เป็น instance ของคนที่login
 
 class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
@@ -63,34 +64,42 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
         user_shop = Shop.objects.filter(shopkeeper=request.user).first()
         categories = MenuCategory.objects.filter(shop=user_shop)  
         form = MenuForm()  
-        form.fields['categories'].queryset  = categories
+        form.fields['categories'].queryset  = categories   #defind queryset ให้ categories ในแบบformให้เป็น cat ที่ดึงมา ง่ายๆคือโชว์แค่catของร้านนั้น
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
     def post(self, request):
         user_shop = Shop.objects.filter(shopkeeper=request.user).first()
-        form = MenuForm(request.POST, request.FILES)
-
+        categories = MenuCategory.objects.filter(shop=user_shop)
+        form = MenuForm(request.POST, request.FILES)  #create form จากข้อมูลที่ส่งมาจากฟอร์มใน request
+        form.fields['categories'].queryset = categories
         if form.is_valid():
+            
             menu_item = form.save(commit=False)
-            menu_item.shop = user_shop
+            menu_item.shop = user_shop 
             menu_item.save()
 
             category_ids = form.cleaned_data.get('categories')
-            new_category_name = form.cleaned_data.get('new_category')
+            new_category_name = form.cleaned_data.get('new_category')   #สร้างcatใหม่
 
+            
             if new_category_name:
-                new_category, created = MenuCategory.objects.get_or_create(
+                
+                #created -> boolean
+                new_category, created = MenuCategory.objects.get_or_create(    #ถ้ามี created is False ไม่มี True
                     name=new_category_name, shop=user_shop
                 )
+                
+                #True
                 if created:
-                    category_ids = list(category_ids) if category_ids else []
+                    category_ids = list(category_ids) if category_ids else [] #เช็คว่ามี catไหนที่เลือกไว้ไหม ถ้ามีให้แปลงเป็น list ถ้าไม่สร้าง []  
                     category_ids.append(new_category)
 
             if category_ids:
-                menu_item.menucategory_set.set(category_ids)
+                menu_item.menucategory_set.set(category_ids) #define cat ที่เกี่ยวข้องกับเมนู m2m
 
             return redirect('shop')
-
+        
+        print("Form Errors:", form.errors)
         categories = MenuCategory.objects.filter(shop=user_shop)
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
@@ -101,12 +110,9 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, pk):
         menu_to_edit = Menu.objects.get(pk=pk)
         user_shop = menu_to_edit.shop
-
         categories = MenuCategory.objects.filter(shop=user_shop)
-
-        menu_form = MenuForm(instance=menu_to_edit)
-        menu_form.fields['categories'].queryset = categories  
-
+        menu_form = MenuForm(instance=menu_to_edit)  #ใช้ instance เพื่อบอกว่าฟอร์มนี้ต้องการแก้ไขเมนู
+        menu_form.fields['categories'].queryset = categories  # กำหนด queryset ใหม่
         return render(request, 'menu_form.html', {
             'form': menu_form,
             'categories': categories,
@@ -117,6 +123,9 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
         menu_to_edit = Menu.objects.get(pk=pk)
         user_shop = menu_to_edit.shop
         menu_form = MenuForm(request.POST, request.FILES, instance=menu_to_edit)
+        # กำหนด queryset ใหม่สำหรับ categories
+        categories = MenuCategory.objects.filter(shop=user_shop)
+        menu_form.fields['categories'].queryset = categories  # กำหนด queryset ใหม่ใน post
 
         if menu_form.is_valid():
             updated_menu_item = menu_form.save(commit=False)
@@ -130,20 +139,20 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 new_category, created = MenuCategory.objects.get_or_create(
                     name=new_category_name, shop=user_shop
                 )
+                
                 if created:
-                    selected_category_ids = list(selected_category_ids or []) + [new_category]
+                    selected_category_ids = list(selected_category_ids or []) + [new_category] # แปลง selected_category_ids เป็นliist และเพิ่ม new_category เข้าไป
 
-            if selected_category_ids:
-                updated_menu_item.menucategory_set.set(selected_category_ids)
+            if selected_category_ids: #add cat ที่เลือก
+                updated_menu_item.menucategory_set.set(selected_category_ids)  #m2m
 
             return redirect('shop')
 
-        categories = MenuCategory.objects.filter(shop=user_shop)
+        print("Form Errors:", menu_form.errors) 
         return render(request, 'menu_form.html', {
             'form': menu_form,
             'categories': categories,
         })
-
 
 
 
@@ -170,7 +179,7 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         user = request.user
         shop = Shop.objects.get(shopkeeper=user)
-        orders = Order.objects.filter(shop=shop).order_by('-order_date', '-id').select_related('customer')
+        orders = Order.objects.filter(shop=shop).order_by('-order_date', '-id').select_related('customer')  #only for o2o and fk
         order_count = Order.objects.filter(shop=shop).values('order_status').annotate(count=Count('order_status'))
 
         for order in orders:
@@ -196,14 +205,15 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
             order.order_status = 'Cancelled'
             order.save()
 
-            
             return redirect('manage_order')
 
         elif action == 'status':
             new_status = request.POST.get('new_status')
+            
+            #ในmodel เขียนstatusเป็น class
             if new_status in dict(Order.Status.choices).keys():
                 order = Order.objects.get(id=order_id)
-                order.order_status = new_status
+                order.order_status = new_status #update statis
                 order.save()
             return redirect('manage_order')
 
@@ -216,19 +226,27 @@ class DailySummaryView(LoginRequiredMixin, View):
         selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
 
         shop = Shop.objects.get(shopkeeper=request.user)
-
+        # class Order
+        # shop = models.ForeignKey(
+        # "shop.Shop",
+    #     class OrderItem(models.Model):
+    # order = models.ForeignKey(
+    #     "order.Order",
+    # menu = models.ForeignKey(
+        # "shop.Menu",
         menu_summary = OrderItem.objects.filter(
             order__shop=shop, 
-            order__order_date=selected_date
-        ).exclude(order__order_status='Cancelled').values(
+            order__order_date=selected_date #กรองให้ตรงกับที่ user เลือก
+        ).exclude(order__order_status='Cancelled').values(   
             'menu__name'
         ).annotate(
-            total_orders=Count('menu'), 
-            total_amount=Sum('price')
+            total_orders=Count('menu'), #จน.ที่ menu ถูกสั่ง
+            total_amount=Sum('price') #OrderItem
         )
 
-        total_sales = sum(item['total_amount'] for item in menu_summary)
 
+        total_sales = sum(item['total_amount'] for item in menu_summary)  #นอดขายรวส
+        #item แทนแต่ละ dic
         return render(request, "daily_summary.html", {
             "menu_summary": menu_summary,
             "selected_date": selected_date,
