@@ -27,4 +27,6 @@ urlpatterns = [
     path('shop/', include('shop.urls')),
     path('order/', include('order.urls')),
     path('staff/', include('staff.urls')),
-]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  #defind URL ให้ไฟล์มีเดีย 
+
+#django ไป ROOT หาไฟล์ แล้วส่งให้user

@@ -64,7 +64,7 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
         user_shop = Shop.objects.filter(shopkeeper=request.user).first()
         categories = MenuCategory.objects.filter(shop=user_shop)  
         form = MenuForm()  
-        form.fields['categories'].queryset  = categories   #defind queryset ให้ categories ในแบบformให้เป็น cat ที่ดึงมา ง่ายๆคือโชว์แค่catของร้านนั้น
+        form.fields['categories'].queryset  = categories   #defind queryset ให้ categories ในแบบformให้เป็น cat ที่ดึงมา ง่ายๆคือดึงแค่catของร้านนั้น มั้ง
         return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
     def post(self, request):
@@ -73,17 +73,14 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
         form = MenuForm(request.POST, request.FILES)  #create form จากข้อมูลที่ส่งมาจากฟอร์มใน request
         form.fields['categories'].queryset = categories
         if form.is_valid():
-            
             menu_item = form.save(commit=False)
             menu_item.shop = user_shop 
             menu_item.save()
 
             category_ids = form.cleaned_data.get('categories')
             new_category_name = form.cleaned_data.get('new_category')   #สร้างcatใหม่
-
             
             if new_category_name:
-                
                 #created -> boolean
                 new_category, created = MenuCategory.objects.get_or_create(    #ถ้ามี created is False ไม่มี True
                     name=new_category_name, shop=user_shop
@@ -122,10 +119,10 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, pk):
         menu_to_edit = Menu.objects.get(pk=pk)
         user_shop = menu_to_edit.shop
-        menu_form = MenuForm(request.POST, request.FILES, instance=menu_to_edit)
-        # กำหนด queryset ใหม่สำหรับ categories
+        menu_form = MenuForm(request.POST, request.FILES, instance=menu_to_edit)  #สร้างฟอร์มจากข้อมูลที่ส่งมาจากฟอร์ม พร้อมกับไฟล์ภาพ (ถ้ามี)
         categories = MenuCategory.objects.filter(shop=user_shop)
-        menu_form.fields['categories'].queryset = categories  # กำหนด queryset ใหม่ใน post
+        menu_form.fields['categories'].queryset = categories           # กำหนด queryset ใหม่สำหรับ categories ในฟอร์มมมมม
+
 
         if menu_form.is_valid():
             updated_menu_item = menu_form.save(commit=False)
@@ -197,6 +194,8 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
 
     def post(self, request):
+        
+        #เอาจากฟอร์ม HTML
         order_id = request.POST.get('orderid')
         action = request.POST.get('action')
 
@@ -210,9 +209,10 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
         elif action == 'status':
             new_status = request.POST.get('new_status')
             
-            #ในmodel เขียนstatusเป็น class
-            if new_status in dict(Order.Status.choices).keys():
-                order = Order.objects.get(id=order_id)
+            #เช็คว่ามีการส่ง new_status ที่อยู่ในkeyบ่
+            #สร้าง dic จากตัวเลือกstatus
+            if new_status in dict(Order.Status.choices).keys():  #return all key in dic
+                order = Order.objects.get(id=order_id) #หา order
                 order.order_status = new_status #update statis
                 order.save()
             return redirect('manage_order')

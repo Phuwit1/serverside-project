@@ -149,5 +149,9 @@ MEDIA_DIR = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
+# BASE_DIR: เป็นพาธหลักของโปรเจค Django ที่ใช้เป็นพื้นฐานในการสร้างพาธอื่นๆ
+# MEDIA_DIR: ถูกตั้งค่าด้วยการใช้ Path ที่อ้างอิงถึงโฟลเดอร์ media ภายใน BASE_DIR
+# MEDIA_URL และ MEDIA_ROOT: ถูกตั้งค่าเพื่อให้ Django สามารถเข้าถึงและจัดการไฟล์มีเดียได้
+
 
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
