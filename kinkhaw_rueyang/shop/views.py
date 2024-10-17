@@ -42,7 +42,7 @@ class ManageMenuView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         menu_data = [
             {
-                'item': menu,
+                'item': menu,  #เก้บ oj
                 'categories': [cat.name for cat in menu.menucategory_set.all()] #ชื่อ cat ของเมนู
             }
             for menu in menus
@@ -96,9 +96,9 @@ class MenuCreateView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             return redirect('shop')
         
-        print("Form Errors:", form.errors)
-        categories = MenuCategory.objects.filter(shop=user_shop)
-        return render(request, 'menu_form.html', {'form': form, 'categories': categories})
+        # print("Form Errors:", form.errors)
+        # categories = MenuCategory.objects.filter(shop=user_shop)
+        # return render(request, 'menu_form.html', {'form': form, 'categories': categories})
 
 class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/authen/'
@@ -109,7 +109,7 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
         user_shop = menu_to_edit.shop
         categories = MenuCategory.objects.filter(shop=user_shop)
         menu_form = MenuForm(instance=menu_to_edit)  #ใช้ instance เพื่อบอกว่าฟอร์มนี้ต้องการแก้ไขเมนู
-        menu_form.fields['categories'].queryset = categories  # กำหนด queryset ใหม่
+        menu_form.fields['categories'].queryset = categories  # กำหนด queryset 
         return render(request, 'menu_form.html', {
             'form': menu_form,
             'categories': categories,
@@ -145,11 +145,11 @@ class MenuEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             return redirect('shop')
 
-        print("Form Errors:", menu_form.errors) 
-        return render(request, 'menu_form.html', {
-            'form': menu_form,
-            'categories': categories,
-        })
+        # print("Form Errors:", menu_form.errors) 
+        # return render(request, 'menu_form.html', {
+        #     'form': menu_form,
+        #     'categories': categories,
+        # })
 
 
 
@@ -195,7 +195,6 @@ class ShopOrderView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def post(self, request):
         
-        #เอาจากฟอร์ม HTML
         order_id = request.POST.get('orderid')
         action = request.POST.get('action')
 
@@ -237,7 +236,7 @@ class DailySummaryView(LoginRequiredMixin, View):
         menu_summary = OrderItem.objects.filter(
             order__shop=shop, 
             order__order_date=selected_date #กรองให้ตรงกับที่ user เลือก
-        ).exclude(order__order_status='Cancelled').values(   
+        ).exclude(order__order_status='Cancelled').values(      #order__order_status__in=['Cancelled', 'Order']
             'menu__name'
         ).annotate(
             total_orders=Count('menu'), #จน.ที่ menu ถูกสั่ง

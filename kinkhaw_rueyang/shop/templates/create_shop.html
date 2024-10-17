@@ -19,10 +19,11 @@
                 {{ form.non_field_errors }}
             </div>
             {% endif %}
+
             {% for field in form %}
             <div class="mb-3">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
+                {{ field }}   <!-- <input>, <textarea-->
                 {% if field.errors %}
                 <div class="alert alert-danger">{{ field.errors }}</div>
                 {% endif %}
