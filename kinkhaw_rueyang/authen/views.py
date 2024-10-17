@@ -85,7 +85,8 @@ class MyProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
             users = UserProfile.objects.get(user=use)
             form = UserProfileForm(instance=users)
         except ObjectDoesNotExist:
-            return HttpResponse("<h1 style='font-size:100px'>ไม่พบUser Profileนี้ 🤨</h1>")
+            UserProfile.objects.create(user=request.user)
+            return redirect("myprofile")
         return render(request, "myprofile.html", {
             'form': form,
             'users': users,
